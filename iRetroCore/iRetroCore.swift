@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol iRetroCore {
+public protocol iRetroCoreProtocol {
     
 }
