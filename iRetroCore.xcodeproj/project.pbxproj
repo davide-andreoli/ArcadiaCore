@@ -12,6 +12,7 @@
 		95456B9F2BE2AC0A00113B8A /* iRetroCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */; };
 		95456BA02BE2AC0A00113B8A /* iRetroCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 95456B922BE2AC0900113B8A /* iRetroCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		95456C3D2BE2B4F100113B8A /* iRetroCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456C3C2BE2B4F100113B8A /* iRetroCore.swift */; };
+		956F84142BF3392C0025FC5F /* iRetroCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,6 +32,7 @@
 		95456B992BE2AC0A00113B8A /* iRetroCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iRetroCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreTests.swift; sourceTree = "<group>"; };
 		95456C3C2BE2B4F100113B8A /* iRetroCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCore.swift; sourceTree = "<group>"; };
+		956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreEmulationState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,6 +78,7 @@
 				95456B922BE2AC0900113B8A /* iRetroCore.h */,
 				95456B932BE2AC0900113B8A /* iRetroCore.docc */,
 				95456C3C2BE2B4F100113B8A /* iRetroCore.swift */,
+				956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */,
 			);
 			path = iRetroCore;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				95456B942BE2AC0900113B8A /* iRetroCore.docc in Sources */,
+				956F84142BF3392C0025FC5F /* iRetroCoreEmulationState.swift in Sources */,
 				95456C3D2BE2B4F100113B8A /* iRetroCore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
