@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum iRetroCoreButton: Int16 {
+public enum ArcadiaCoreButton: Int16 {
     case joypadB = 0
     case joypadY = 1
     case joypadSelect = 2

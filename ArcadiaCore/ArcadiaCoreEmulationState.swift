@@ -9,14 +9,21 @@ import Foundation
 import CoreGraphics
 import QuartzCore
 
-@Observable public class iRetroCoreEmulationState {
+@Observable public class ArcadiaCoreEmulationState {
     
-    public static var sharedInstance = iRetroCoreEmulationState()
+    public static var sharedInstance = ArcadiaCoreEmulationState()
     
-    public var audioVideoInfo: iRetroAudioVideoInfo? = nil
+    public var audioVideoInfo: ArcadiaAudioVideoInfo? = nil
     public var mainBuffer = [UInt8]()
-    public var mainBufferPixelFormat: iRetroCorePixelType = .pixelFormatXRGB8888
-    public var currentFrame : CGImage? = nil
+    public var mainBufferPixelFormat: ArcadiaCorePixelType = .pixelFormatXRGB8888
+    public var currentFrame : CGImage? {
+        get {
+            return createCGImage(pixels: mainBuffer, width: 160, height: 144)
+        }
+        set (newValue) {
+            // Just for binding
+        }
+    }
     public var buttonsPressed : [Int16] = []
     public var currentAudioFrame = [Int16]()
     public var currentGameURL: URL? = nil
@@ -43,6 +50,7 @@ import QuartzCore
             return nil
         }
         
+       
         return CGImage(
             width: width,
             height: height,
@@ -50,7 +58,7 @@ import QuartzCore
             bitsPerPixel: bytesPerPixel * bitsPerComponent,
             bytesPerRow: width * bytesPerPixel,
             space: colorspace,
-            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipFirst.rawValue), // Skip the first byte (alpha)
+            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue), // Skip the first byte (alpha)
             provider: provider,
             decode: nil,
             shouldInterpolate: true,

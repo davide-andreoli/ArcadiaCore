@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol iRetroGameGeometryProtocol {
+public protocol ArcadiaGameGeometryProtocol {
     var base_width: UInt32 { get set }
     var base_height: UInt32 { get set }
     var max_width: UInt32 { get set }

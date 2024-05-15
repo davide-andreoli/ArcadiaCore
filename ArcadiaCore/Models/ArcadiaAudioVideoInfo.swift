@@ -7,23 +7,23 @@
 
 import Foundation
 
-public struct iRetroAudioVideoInfo: iRetroAudioVideoInfoProtocol {
-    public typealias iRetroGeometryType = iRetroGeometry
+public struct ArcadiaAudioVideoInfo: ArcadiaAudioVideoInfoProtocol {
+    public typealias ArcadiaGeometryType = ArcadiaGeometry
     
-    public typealias iRetroTimingType = iRetroSystemTiming
+    public typealias ArcadiaTimingType = ArcadiaSystemTiming
     
-    public var geometry: iRetroGeometry
+    public var geometry: ArcadiaGeometry
     
-    public var timing: iRetroSystemTiming
+    public var timing: ArcadiaSystemTiming
     
-    public init(geometry: iRetroGeometry, timing: iRetroSystemTiming) {
+    public init(geometry: ArcadiaGeometry, timing: ArcadiaSystemTiming) {
         self.geometry = geometry
         self.timing = timing
     }
     
 }
 
-public struct iRetroGeometry: iRetroGameGeometryProtocol {
+public struct ArcadiaGeometry: ArcadiaGameGeometryProtocol {
     public var base_width: UInt32
     
     public var base_height: UInt32
@@ -57,7 +57,7 @@ public struct iRetroGeometry: iRetroGameGeometryProtocol {
     
 }
 
-public struct iRetroSystemTiming: iRetroSystemTimingProtocol {
+public struct ArcadiaSystemTiming: ArcadiaSystemTimingProtocol {
     public var fps: Double
     
     public var sample_rate: Double

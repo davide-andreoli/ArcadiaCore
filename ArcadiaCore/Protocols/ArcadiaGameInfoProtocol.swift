@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol iRetroGameInfoProtocol {
+public protocol ArcadiaGameInfoProtocol {
     var path: UnsafePointer<CChar>! { get set }
     var data: UnsafeRawPointer! { get set }
     var size: Int { get set }

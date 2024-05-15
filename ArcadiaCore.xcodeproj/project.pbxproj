@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		95456B942BE2AC0900113B8A /* iRetroCore.docc in Sources */ = {isa = PBXBuildFile; fileRef = 95456B932BE2AC0900113B8A /* iRetroCore.docc */; };
-		95456B9A2BE2AC0A00113B8A /* iRetroCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95456B8F2BE2AC0900113B8A /* iRetroCore.framework */; };
+		95456B942BE2AC0900113B8A /* ArcadiaCore.docc in Sources */ = {isa = PBXBuildFile; fileRef = 95456B932BE2AC0900113B8A /* ArcadiaCore.docc */; };
+		95456B9A2BE2AC0A00113B8A /* ArcadiaCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95456B8F2BE2AC0900113B8A /* ArcadiaCore.framework */; };
 		95456B9F2BE2AC0A00113B8A /* iRetroCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */; };
-		95456BA02BE2AC0A00113B8A /* iRetroCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 95456B922BE2AC0900113B8A /* iRetroCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		95456C3D2BE2B4F100113B8A /* iRetroCoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456C3C2BE2B4F100113B8A /* iRetroCoreProtocol.swift */; };
-		956F84142BF3392C0025FC5F /* iRetroCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */; };
-		956F84172BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84162BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift */; };
-		956F84192BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84182BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift */; };
-		956F841B2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841A2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift */; };
-		956F841D2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841C2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift */; };
-		956F84202BF3BF420025FC5F /* iRetroCorePixelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841F2BF3BF420025FC5F /* iRetroCorePixelType.swift */; };
-		956F84222BF3BF5C0025FC5F /* iRetroCoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84212BF3BF5C0025FC5F /* iRetroCoreButton.swift */; };
-		956F84252BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84242BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift */; };
+		95456BA02BE2AC0A00113B8A /* ArcadiaCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 95456B922BE2AC0900113B8A /* ArcadiaCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		95456C3D2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456C3C2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift */; };
+		956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */; };
+		956F84172BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */; };
+		956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */; };
+		956F841B2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841A2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift */; };
+		956F841D2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841C2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift */; };
+		956F84202BF3BF420025FC5F /* ArcadiaCorePixelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841F2BF3BF420025FC5F /* ArcadiaCorePixelType.swift */; };
+		956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */; };
+		956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,20 +33,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		95456B8F2BE2AC0900113B8A /* iRetroCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = iRetroCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		95456B922BE2AC0900113B8A /* iRetroCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRetroCore.h; sourceTree = "<group>"; };
-		95456B932BE2AC0900113B8A /* iRetroCore.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = iRetroCore.docc; sourceTree = "<group>"; };
-		95456B992BE2AC0A00113B8A /* iRetroCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iRetroCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		95456B8F2BE2AC0900113B8A /* ArcadiaCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ArcadiaCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		95456B922BE2AC0900113B8A /* ArcadiaCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ArcadiaCore.h; sourceTree = "<group>"; };
+		95456B932BE2AC0900113B8A /* ArcadiaCore.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = ArcadiaCore.docc; sourceTree = "<group>"; };
+		95456B992BE2AC0A00113B8A /* ArcadiaCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArcadiaCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreTests.swift; sourceTree = "<group>"; };
-		95456C3C2BE2B4F100113B8A /* iRetroCoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreProtocol.swift; sourceTree = "<group>"; };
-		956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreEmulationState.swift; sourceTree = "<group>"; };
-		956F84162BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroGameGeometryProtocol.swift; sourceTree = "<group>"; };
-		956F84182BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroSystemTimingProtocol.swift; sourceTree = "<group>"; };
-		956F841A2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroAudioVideoInfoProtocol.swift; sourceTree = "<group>"; };
-		956F841C2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroGameInfoProtocol.swift; sourceTree = "<group>"; };
-		956F841F2BF3BF420025FC5F /* iRetroCorePixelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCorePixelType.swift; sourceTree = "<group>"; };
-		956F84212BF3BF5C0025FC5F /* iRetroCoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreButton.swift; sourceTree = "<group>"; };
-		956F84242BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroAudioVideoInfo.swift; sourceTree = "<group>"; };
+		95456C3C2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreProtocol.swift; sourceTree = "<group>"; };
+		956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreEmulationState.swift; sourceTree = "<group>"; };
+		956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaGameGeometryProtocol.swift; sourceTree = "<group>"; };
+		956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaSystemTimingProtocol.swift; sourceTree = "<group>"; };
+		956F841A2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaAudioVideoInfoProtocol.swift; sourceTree = "<group>"; };
+		956F841C2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaGameInfoProtocol.swift; sourceTree = "<group>"; };
+		956F841F2BF3BF420025FC5F /* ArcadiaCorePixelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCorePixelType.swift; sourceTree = "<group>"; };
+		956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreButton.swift; sourceTree = "<group>"; };
+		956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaAudioVideoInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,7 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95456B9A2BE2AC0A00113B8A /* iRetroCore.framework in Frameworks */,
+				95456B9A2BE2AC0A00113B8A /* ArcadiaCore.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,8 +71,8 @@
 		95456B852BE2AC0900113B8A = {
 			isa = PBXGroup;
 			children = (
-				95456B912BE2AC0900113B8A /* iRetroCore */,
-				95456B9D2BE2AC0A00113B8A /* iRetroCoreTests */,
+				95456B912BE2AC0900113B8A /* ArcadiaCore */,
+				95456B9D2BE2AC0A00113B8A /* ArcadiaCoreTests */,
 				95456B902BE2AC0900113B8A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -80,41 +80,41 @@
 		95456B902BE2AC0900113B8A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				95456B8F2BE2AC0900113B8A /* iRetroCore.framework */,
-				95456B992BE2AC0A00113B8A /* iRetroCoreTests.xctest */,
+				95456B8F2BE2AC0900113B8A /* ArcadiaCore.framework */,
+				95456B992BE2AC0A00113B8A /* ArcadiaCoreTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		95456B912BE2AC0900113B8A /* iRetroCore */ = {
+		95456B912BE2AC0900113B8A /* ArcadiaCore */ = {
 			isa = PBXGroup;
 			children = (
 				956F84232BF3BFAA0025FC5F /* Models */,
 				956F841E2BF3BF340025FC5F /* Enums */,
 				956F84152BF3BE940025FC5F /* Protocols */,
-				95456B922BE2AC0900113B8A /* iRetroCore.h */,
-				95456B932BE2AC0900113B8A /* iRetroCore.docc */,
-				956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */,
+				95456B922BE2AC0900113B8A /* ArcadiaCore.h */,
+				95456B932BE2AC0900113B8A /* ArcadiaCore.docc */,
+				956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */,
 			);
-			path = iRetroCore;
+			path = ArcadiaCore;
 			sourceTree = "<group>";
 		};
-		95456B9D2BE2AC0A00113B8A /* iRetroCoreTests */ = {
+		95456B9D2BE2AC0A00113B8A /* ArcadiaCoreTests */ = {
 			isa = PBXGroup;
 			children = (
 				95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */,
 			);
-			path = iRetroCoreTests;
+			path = ArcadiaCoreTests;
 			sourceTree = "<group>";
 		};
 		956F84152BF3BE940025FC5F /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
-				95456C3C2BE2B4F100113B8A /* iRetroCoreProtocol.swift */,
-				956F841C2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift */,
-				956F84162BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift */,
-				956F84182BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift */,
-				956F841A2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift */,
+				95456C3C2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift */,
+				956F841C2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift */,
+				956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */,
+				956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */,
+				956F841A2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -122,8 +122,8 @@
 		956F841E2BF3BF340025FC5F /* Enums */ = {
 			isa = PBXGroup;
 			children = (
-				956F841F2BF3BF420025FC5F /* iRetroCorePixelType.swift */,
-				956F84212BF3BF5C0025FC5F /* iRetroCoreButton.swift */,
+				956F841F2BF3BF420025FC5F /* ArcadiaCorePixelType.swift */,
+				956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -131,7 +131,7 @@
 		956F84232BF3BFAA0025FC5F /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				956F84242BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift */,
+				956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -143,16 +143,16 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95456BA02BE2AC0A00113B8A /* iRetroCore.h in Headers */,
+				95456BA02BE2AC0A00113B8A /* ArcadiaCore.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		95456B8E2BE2AC0900113B8A /* iRetroCore */ = {
+		95456B8E2BE2AC0900113B8A /* ArcadiaCore */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 95456BA32BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "iRetroCore" */;
+			buildConfigurationList = 95456BA32BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "ArcadiaCore" */;
 			buildPhases = (
 				95456B8A2BE2AC0900113B8A /* Headers */,
 				95456B8B2BE2AC0900113B8A /* Sources */,
@@ -163,14 +163,14 @@
 			);
 			dependencies = (
 			);
-			name = iRetroCore;
+			name = ArcadiaCore;
 			productName = iRetroCore;
-			productReference = 95456B8F2BE2AC0900113B8A /* iRetroCore.framework */;
+			productReference = 95456B8F2BE2AC0900113B8A /* ArcadiaCore.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		95456B982BE2AC0A00113B8A /* iRetroCoreTests */ = {
+		95456B982BE2AC0A00113B8A /* ArcadiaCoreTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 95456BA62BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "iRetroCoreTests" */;
+			buildConfigurationList = 95456BA62BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "ArcadiaCoreTests" */;
 			buildPhases = (
 				95456B952BE2AC0A00113B8A /* Sources */,
 				95456B962BE2AC0A00113B8A /* Frameworks */,
@@ -181,9 +181,9 @@
 			dependencies = (
 				95456B9C2BE2AC0A00113B8A /* PBXTargetDependency */,
 			);
-			name = iRetroCoreTests;
+			name = ArcadiaCoreTests;
 			productName = iRetroCoreTests;
-			productReference = 95456B992BE2AC0A00113B8A /* iRetroCoreTests.xctest */;
+			productReference = 95456B992BE2AC0A00113B8A /* ArcadiaCoreTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -204,7 +204,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 95456B892BE2AC0900113B8A /* Build configuration list for PBXProject "iRetroCore" */;
+			buildConfigurationList = 95456B892BE2AC0900113B8A /* Build configuration list for PBXProject "ArcadiaCore" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -217,8 +217,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				95456B8E2BE2AC0900113B8A /* iRetroCore */,
-				95456B982BE2AC0A00113B8A /* iRetroCoreTests */,
+				95456B8E2BE2AC0900113B8A /* ArcadiaCore */,
+				95456B982BE2AC0A00113B8A /* ArcadiaCoreTests */,
 			);
 		};
 /* End PBXProject section */
@@ -245,16 +245,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				95456B942BE2AC0900113B8A /* iRetroCore.docc in Sources */,
-				956F841B2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift in Sources */,
-				956F841D2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift in Sources */,
-				956F84192BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift in Sources */,
-				956F84142BF3392C0025FC5F /* iRetroCoreEmulationState.swift in Sources */,
-				956F84172BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift in Sources */,
-				956F84202BF3BF420025FC5F /* iRetroCorePixelType.swift in Sources */,
-				956F84252BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift in Sources */,
-				95456C3D2BE2B4F100113B8A /* iRetroCoreProtocol.swift in Sources */,
-				956F84222BF3BF5C0025FC5F /* iRetroCoreButton.swift in Sources */,
+				95456B942BE2AC0900113B8A /* ArcadiaCore.docc in Sources */,
+				956F841B2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift in Sources */,
+				956F841D2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift in Sources */,
+				956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */,
+				956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */,
+				956F84172BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift in Sources */,
+				956F84202BF3BF420025FC5F /* ArcadiaCorePixelType.swift in Sources */,
+				956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */,
+				95456C3D2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift in Sources */,
+				956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -271,7 +271,7 @@
 /* Begin PBXTargetDependency section */
 		95456B9C2BE2AC0A00113B8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 95456B8E2BE2AC0900113B8A /* iRetroCore */;
+			target = 95456B8E2BE2AC0900113B8A /* ArcadiaCore */;
 			targetProxy = 95456B9B2BE2AC0A00113B8A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -426,7 +426,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.davideandreoli.iRetroCore;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davideandreoli.ArcadiaCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -467,7 +467,7 @@
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.davideandreoli.iRetroCore;
+				PRODUCT_BUNDLE_IDENTIFIER = com.davideandreoli.ArcadiaCore;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SDKROOT = auto;
 				SKIP_INSTALL = YES;
@@ -526,7 +526,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		95456B892BE2AC0900113B8A /* Build configuration list for PBXProject "iRetroCore" */ = {
+		95456B892BE2AC0900113B8A /* Build configuration list for PBXProject "ArcadiaCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				95456BA12BE2AC0A00113B8A /* Debug */,
@@ -535,7 +535,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		95456BA32BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "iRetroCore" */ = {
+		95456BA32BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "ArcadiaCore" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				95456BA42BE2AC0A00113B8A /* Debug */,
@@ -544,7 +544,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		95456BA62BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "iRetroCoreTests" */ = {
+		95456BA62BE2AC0A00113B8A /* Build configuration list for PBXNativeTarget "ArcadiaCoreTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				95456BA72BE2AC0A00113B8A /* Debug */,

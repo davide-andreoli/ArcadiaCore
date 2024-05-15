@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum iRetroCorePixelType: UInt32 {
+public enum ArcadiaCorePixelType: UInt32 {
     case pixelFormat0RGB1555 = 0
     case pixelFormatXRGB8888 = 1
     case pixelFormatRGB565 = 2

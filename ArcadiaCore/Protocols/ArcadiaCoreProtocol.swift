@@ -8,22 +8,22 @@
 import Foundation
 import CoreGraphics
 
-public protocol iRetroCoreProtocol {
+public protocol ArcadiaCoreProtocol {
     
-    associatedtype iRetroCoreType: iRetroCoreProtocol
-    associatedtype iRetroGameInfo: iRetroGameInfoProtocol
-    associatedtype iRetroAudioVideoInfoType: iRetroAudioVideoInfoProtocol
-    associatedtype iRetroGameGeometryType: iRetroGameGeometryProtocol
-    associatedtype iRetroSystemTimingType: iRetroSystemTimingProtocol
+    associatedtype ArcadiaCoreType: ArcadiaCoreProtocol
+    associatedtype ArcadiaGameInfo: ArcadiaGameInfoProtocol
+    associatedtype ArcadiaAudioVideoInfoType: ArcadiaAudioVideoInfoProtocol
+    associatedtype ArcadiaGameGeometryType: ArcadiaGameGeometryProtocol
+    associatedtype ArcadiaSystemTimingType: ArcadiaSystemTimingProtocol
     
-    static var sharedInstance: iRetroCoreType { get set }
+    static var sharedInstance: ArcadiaCoreType { get set }
     
     var paused: Bool {get set}
     var initialized: Bool {get set}
     var mainGameLoop : Timer? {get set}
     var loadedGame: URL? {get set}
     
-    var audioVideoInfo: iRetroAudioVideoInfoType {get set}
+    var audioVideoInfo: ArcadiaAudioVideoInfoType {get set}
     var pitch: Int {get set}
 
     
@@ -37,10 +37,10 @@ public protocol iRetroCoreProtocol {
     
     // Libretro API Interfaces - To be implemented by the core
     func retroInit()
-    func retroGetSystemAVInfo(info: UnsafeMutablePointer<iRetroAudioVideoInfoType>!)
+    func retroGetSystemAVInfo(info: UnsafeMutablePointer<ArcadiaAudioVideoInfoType>!)
     func retroDeinit()
     func retroRun()
-    func retroLoadGame(gameInfo: iRetroGameInfo)
+    func retroLoadGame(gameInfo: ArcadiaGameInfo)
     func retroUnloadGame()
     func retroSerializeSize() -> Int
     func retroSerialize(data: UnsafeMutableRawPointer!, size: Int)
@@ -62,7 +62,7 @@ public protocol iRetroCoreProtocol {
     func saveState(saveFileURL: URL)
     func loadState(saveFileURL: URL)
     
-    mutating func pressButton(button: iRetroCoreButton)
+    mutating func pressButton(button: ArcadiaCoreButton)
     func startGameLoop()
     func stopGameLoop()
     mutating func pauseGame()
@@ -71,7 +71,7 @@ public protocol iRetroCoreProtocol {
 }
 
 // Libretro Callbacks
-extension iRetroCoreProtocol {
+extension ArcadiaCoreProtocol {
     
     
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
@@ -81,7 +81,7 @@ extension iRetroCoreProtocol {
                 data?.storeBytes(of: true, as: Bool.self)
                 return true
             case 10:
-                iRetroCoreEmulationState.sharedInstance.mainBufferPixelFormat = iRetroCorePixelType(rawValue: data!.load(as: UInt32.self))
+                ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat = ArcadiaCorePixelType(rawValue: data!.load(as: UInt32.self))
                 return true
             default:
                 return false
@@ -118,7 +118,7 @@ extension iRetroCoreProtocol {
                     var blue: UInt8 = 0
                     var alpha: UInt8 = 0
                     
-                    if iRetroCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
+                    if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
                         if endianness == CFByteOrderLittleEndian.rawValue {
                             blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
                             green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
@@ -141,8 +141,8 @@ extension iRetroCoreProtocol {
                 }
             }
             
-            iRetroCoreEmulationState.sharedInstance.mainBuffer = pixelArray
-            iRetroCoreEmulationState.sharedInstance.currentFrame = createCGImageFromXRGB8888(pixels: pixelArray, width: Int(width), height: Int(height))
+            ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
+            
                       
         }
     }
@@ -160,7 +160,7 @@ extension iRetroCoreProtocol {
             let audioBuffer = UnsafeBufferPointer(start: audioData, count: frames * 2)
             let audioSlice = Array(audioBuffer)
             //let audioSliceData = Data(bytes: audioSlice, count: audioSlice.count * MemoryLayout<Int16>.size)
-            iRetroCoreEmulationState.sharedInstance.currentAudioFrame = audioSlice
+            ArcadiaCoreEmulationState.sharedInstance.currentAudioFrame = audioSlice
             
             return frames
         }
@@ -175,9 +175,9 @@ extension iRetroCoreProtocol {
     public var libretroInputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16 {
         return {port,device,index,id in
 
-            if !iRetroCoreEmulationState.sharedInstance.buttonsPressed.isEmpty {
-                if iRetroCoreEmulationState.sharedInstance.buttonsPressed[0] == Int(id) {
-                    iRetroCoreEmulationState.sharedInstance.buttonsPressed.remove(at: 0)
+            if !ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.isEmpty {
+                if ArcadiaCoreEmulationState.sharedInstance.buttonsPressed[0] == Int(id) {
+                    ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.remove(at: 0)
                     return Int16(1)
                 }
             }
@@ -190,7 +190,7 @@ extension iRetroCoreProtocol {
 }
 
 // Frontend/Complex interfaces
-extension iRetroCoreProtocol {
+extension ArcadiaCoreProtocol {
     public func setInputOutputCallbacks() {
         retroSetVideoRefresh(videoRefreshCallback: libretroVideoRefreshCallback)
         retroSetAudioSample(audioSampleCallback: libretroAudioSampleCallback)
@@ -201,8 +201,8 @@ extension iRetroCoreProtocol {
     
     mutating public func getSystemAVInfo() {
         //TODO: Understand if it makes senso to add it to Emulator State
-        var avInfo = iRetroAudioVideoInfoType(geometry: iRetroGameGeometryType(base_width: 0, base_height: 0, max_width: 0, max_height: 0, aspect_ratio: 0.0) as! Self.iRetroAudioVideoInfoType.iRetroGeometryType,
-                                              timing: iRetroSystemTimingType(fps: 0.0, sample_rate: 0.0) as! Self.iRetroAudioVideoInfoType.iRetroTimingType)
+        var avInfo = ArcadiaAudioVideoInfoType(geometry: ArcadiaGameGeometryType(base_width: 0, base_height: 0, max_width: 0, max_height: 0, aspect_ratio: 0.0) as! Self.ArcadiaAudioVideoInfoType.ArcadiaGeometryType,
+                                              timing: ArcadiaSystemTimingType(fps: 0.0, sample_rate: 0.0) as! Self.ArcadiaAudioVideoInfoType.ArcadiaTimingType)
         retroGetSystemAVInfo(info: &avInfo)
         self.audioVideoInfo = avInfo
     }
@@ -225,7 +225,7 @@ extension iRetroCoreProtocol {
     
     mutating public func loadGame(gameURL: URL) {
         self.loadedGame = gameURL
-        iRetroCoreEmulationState.sharedInstance.currentGameURL = gameURL
+        ArcadiaCoreEmulationState.sharedInstance.currentGameURL = gameURL
         var filepath = gameURL.absoluteString
         gameURL.startAccessingSecurityScopedResource()
         var location = filepath.cString(using: String.Encoding.utf8)!
@@ -251,13 +251,13 @@ extension iRetroCoreProtocol {
         
         gameURL.stopAccessingSecurityScopedResource()
         
-        var rom_info = iRetroGameInfo(path: romNameCptr, data: data, size: romFile!.count, meta: nil)
+        var rom_info = ArcadiaGameInfo(path: romNameCptr, data: data, size: romFile!.count, meta: nil)
         retroLoadGame(gameInfo: rom_info)
         
     }
     
     mutating public func unloadGame() {
-        iRetroCoreEmulationState.sharedInstance.currentGameURL = nil
+        ArcadiaCoreEmulationState.sharedInstance.currentGameURL = nil
         //TODO: empty the button pressed array
         retroUnloadGame()
     }
@@ -295,9 +295,9 @@ extension iRetroCoreProtocol {
     
 }
 
-extension iRetroCoreProtocol {
-    mutating public func pressButton(button: iRetroCoreButton) {
-        iRetroCoreEmulationState.sharedInstance.buttonsPressed.append(button.rawValue)
+extension ArcadiaCoreProtocol {
+    mutating public func pressButton(button: ArcadiaCoreButton) {
+        ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.append(button.rawValue)
     
     }
     

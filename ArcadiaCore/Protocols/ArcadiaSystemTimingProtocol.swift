@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol iRetroSystemTimingProtocol {
+public protocol ArcadiaSystemTimingProtocol {
     var fps: Double { get set }
     var sample_rate: Double { get set }
     
