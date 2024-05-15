@@ -11,8 +11,15 @@
 		95456B9A2BE2AC0A00113B8A /* iRetroCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 95456B8F2BE2AC0900113B8A /* iRetroCore.framework */; };
 		95456B9F2BE2AC0A00113B8A /* iRetroCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */; };
 		95456BA02BE2AC0A00113B8A /* iRetroCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 95456B922BE2AC0900113B8A /* iRetroCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		95456C3D2BE2B4F100113B8A /* iRetroCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456C3C2BE2B4F100113B8A /* iRetroCore.swift */; };
+		95456C3D2BE2B4F100113B8A /* iRetroCoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456C3C2BE2B4F100113B8A /* iRetroCoreProtocol.swift */; };
 		956F84142BF3392C0025FC5F /* iRetroCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */; };
+		956F84172BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84162BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift */; };
+		956F84192BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84182BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift */; };
+		956F841B2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841A2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift */; };
+		956F841D2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841C2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift */; };
+		956F84202BF3BF420025FC5F /* iRetroCorePixelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841F2BF3BF420025FC5F /* iRetroCorePixelType.swift */; };
+		956F84222BF3BF5C0025FC5F /* iRetroCoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84212BF3BF5C0025FC5F /* iRetroCoreButton.swift */; };
+		956F84252BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84242BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,8 +38,15 @@
 		95456B932BE2AC0900113B8A /* iRetroCore.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = iRetroCore.docc; sourceTree = "<group>"; };
 		95456B992BE2AC0A00113B8A /* iRetroCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iRetroCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreTests.swift; sourceTree = "<group>"; };
-		95456C3C2BE2B4F100113B8A /* iRetroCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCore.swift; sourceTree = "<group>"; };
+		95456C3C2BE2B4F100113B8A /* iRetroCoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreProtocol.swift; sourceTree = "<group>"; };
 		956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreEmulationState.swift; sourceTree = "<group>"; };
+		956F84162BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroGameGeometryProtocol.swift; sourceTree = "<group>"; };
+		956F84182BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroSystemTimingProtocol.swift; sourceTree = "<group>"; };
+		956F841A2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroAudioVideoInfoProtocol.swift; sourceTree = "<group>"; };
+		956F841C2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroGameInfoProtocol.swift; sourceTree = "<group>"; };
+		956F841F2BF3BF420025FC5F /* iRetroCorePixelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCorePixelType.swift; sourceTree = "<group>"; };
+		956F84212BF3BF5C0025FC5F /* iRetroCoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreButton.swift; sourceTree = "<group>"; };
+		956F84242BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroAudioVideoInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,9 +89,11 @@
 		95456B912BE2AC0900113B8A /* iRetroCore */ = {
 			isa = PBXGroup;
 			children = (
+				956F84232BF3BFAA0025FC5F /* Models */,
+				956F841E2BF3BF340025FC5F /* Enums */,
+				956F84152BF3BE940025FC5F /* Protocols */,
 				95456B922BE2AC0900113B8A /* iRetroCore.h */,
 				95456B932BE2AC0900113B8A /* iRetroCore.docc */,
-				95456C3C2BE2B4F100113B8A /* iRetroCore.swift */,
 				956F84132BF3392C0025FC5F /* iRetroCoreEmulationState.swift */,
 			);
 			path = iRetroCore;
@@ -89,6 +105,35 @@
 				95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */,
 			);
 			path = iRetroCoreTests;
+			sourceTree = "<group>";
+		};
+		956F84152BF3BE940025FC5F /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				95456C3C2BE2B4F100113B8A /* iRetroCoreProtocol.swift */,
+				956F841C2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift */,
+				956F84162BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift */,
+				956F84182BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift */,
+				956F841A2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift */,
+			);
+			path = Protocols;
+			sourceTree = "<group>";
+		};
+		956F841E2BF3BF340025FC5F /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				956F841F2BF3BF420025FC5F /* iRetroCorePixelType.swift */,
+				956F84212BF3BF5C0025FC5F /* iRetroCoreButton.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
+		956F84232BF3BFAA0025FC5F /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				956F84242BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -201,8 +246,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				95456B942BE2AC0900113B8A /* iRetroCore.docc in Sources */,
+				956F841B2BF3BEEA0025FC5F /* iRetroAudioVideoInfoProtocol.swift in Sources */,
+				956F841D2BF3BF020025FC5F /* iRetroGameInfoProtocol.swift in Sources */,
+				956F84192BF3BECE0025FC5F /* iRetroSystemTimingProtocol.swift in Sources */,
 				956F84142BF3392C0025FC5F /* iRetroCoreEmulationState.swift in Sources */,
-				95456C3D2BE2B4F100113B8A /* iRetroCore.swift in Sources */,
+				956F84172BF3BEB80025FC5F /* iRetroGameGeometryProtocol.swift in Sources */,
+				956F84202BF3BF420025FC5F /* iRetroCorePixelType.swift in Sources */,
+				956F84252BF3C01A0025FC5F /* iRetroAudioVideoInfo.swift in Sources */,
+				95456C3D2BE2B4F100113B8A /* iRetroCoreProtocol.swift in Sources */,
+				956F84222BF3BF5C0025FC5F /* iRetroCoreButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

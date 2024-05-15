@@ -8,51 +8,13 @@
 import Foundation
 import CoreGraphics
 
-
-public protocol iRetroGameGeometry {
-    var base_width: UInt32 { get set }
-    var base_height: UInt32 { get set }
-    var max_width: UInt32 { get set }
-    var max_height: UInt32 { get set }
-    var aspect_ratio: Float { get set }
-    
-    init(base_width: UInt32, base_height: UInt32, max_width: UInt32, max_height: UInt32, aspect_ratio: Float)
-}
-
-public protocol iRetroSystemTiming {
-    var fps: Double { get set }
-    var sample_rate: Double { get set }
-    
-    init(fps: Double, sample_rate: Double)
-}
-
-public protocol iRetroAudioVideoInfo {
-    associatedtype iRetroGeometryType: iRetroGameGeometry
-    associatedtype iRetroTimingType: iRetroSystemTiming
-    
-    var geometry: iRetroGeometryType { get set }
-    var timing: iRetroTimingType { get set }
-    
-    init(geometry: iRetroGeometryType, timing: iRetroTimingType)
-}
-
-public protocol iRetroGameInfoProtocol {
-    var path: UnsafePointer<CChar>! { get set }
-    var data: UnsafeRawPointer! { get set }
-    var size: Int { get set }
-    var meta: UnsafePointer<CChar>! { get set }
-    
-    init(path: UnsafePointer<CChar>!, data: UnsafeRawPointer!, size: Int, meta: UnsafePointer<CChar>!)
-}
-
-
 public protocol iRetroCoreProtocol {
     
     associatedtype iRetroCoreType: iRetroCoreProtocol
     associatedtype iRetroGameInfo: iRetroGameInfoProtocol
-    associatedtype iRetroAudioVideoInfoType: iRetroAudioVideoInfo
-    associatedtype iRetroGameGeometryType: iRetroGameGeometry
-    associatedtype iRetroSystemTimingType: iRetroSystemTiming
+    associatedtype iRetroAudioVideoInfoType: iRetroAudioVideoInfoProtocol
+    associatedtype iRetroGameGeometryType: iRetroGameGeometryProtocol
+    associatedtype iRetroSystemTimingType: iRetroSystemTimingProtocol
     
     static var sharedInstance: iRetroCoreType { get set }
     
@@ -63,11 +25,9 @@ public protocol iRetroCoreProtocol {
     
     var audioVideoInfo: iRetroAudioVideoInfoType {get set}
     var pitch: Int {get set}
-    var mainBuffer: [UInt8] {get set}
-    var currentFrame: CGImage? { get set }
-    var buttonsPressed : [Int16] { get set }
-    var currentAudioFrame: [Int16] {get set}
+
     
+    // Libretro Callbacks
     var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {get}
     var libretroVideoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void {get}
     var libretroAudioSampleCallback: @convention(c) (Int16, Int16) -> Void {get}
@@ -75,6 +35,7 @@ public protocol iRetroCoreProtocol {
     var libretroInputPollCallback: @convention(c) () -> Void {get}
     var libretroInputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16 {get}
     
+    // Libretro API Interfaces - To be implemented by the core
     func retroInit()
     func retroGetSystemAVInfo(info: UnsafeMutablePointer<iRetroAudioVideoInfoType>!)
     func retroDeinit()
@@ -91,10 +52,13 @@ public protocol iRetroCoreProtocol {
     func retroSetInputPoll(inputPollCallback: @convention(c) () -> Void)
     func retroSetInputState(inputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16)
     
+    // Frontend/Complex interfaces
     func setInputOutputCallbacks()
     mutating func initializeCore()
+    mutating func deinitializeCore()
     mutating func getSystemAVInfo()
     mutating func loadGame(gameURL: URL)
+    mutating func unloadGame()
     func saveState(saveFileURL: URL)
     func loadState(saveFileURL: URL)
     
@@ -106,31 +70,7 @@ public protocol iRetroCoreProtocol {
     
 }
 
-public enum iRetroCorePixelType: UInt32 {
-    case RGB1555 = 0
-    case XRGB8888 = 1
-    case RGB565 = 2
-}
-
-public enum iRetroCoreButton: Int16 {
-    case joypadB = 0
-    case joypadY = 1
-    case joypadSelect = 2
-    case joypadStart = 3
-    case joypadUp = 4
-    case joypadDown = 5
-    case joypadLeft = 6
-    case joypadRight = 7
-    case joypadA = 8
-    case joypadX = 9
-    case joypadL = 10
-    case joypadR = 11
-    case joypadL2 = 12
-    case joypadR2 = 13
-    case joypadL3 = 14
-    case joypadR3 = 15
-}
-
+// Libretro Callbacks
 extension iRetroCoreProtocol {
     
     
@@ -141,8 +81,7 @@ extension iRetroCoreProtocol {
                 data?.storeBytes(of: true, as: Bool.self)
                 return true
             case 10:
-                //let format = retro_pixel_format(rawValue: data!.load(as: UInt32.self))
-                print("Environment Pixel format set as \(data!.load(as: UInt32.self))")
+                iRetroCoreEmulationState.sharedInstance.mainBufferPixelFormat = iRetroCorePixelType(rawValue: data!.load(as: UInt32.self))
                 return true
             default:
                 return false
@@ -172,18 +111,33 @@ extension iRetroCoreProtocol {
                 for x in 0..<width {
                     let pixelOffset = rowOffset + x * bytesPerPixel * 2 //TODO: Understand why I need to multiply this by two
                     let rgbaOffset = y * width * bytesPerPixel + x * bytesPerPixel
+                    
+                    let endianness = CFByteOrderGetCurrent()
+                    var red: UInt8 = 0
+                    var green: UInt8 = 0
+                    var blue: UInt8 = 0
+                    var alpha: UInt8 = 0
+                    
+                    if iRetroCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
+                        if endianness == CFByteOrderLittleEndian.rawValue {
+                            blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
+                            green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
+                            red = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
+                            alpha = frameBufferPtr.load(fromByteOffset: pixelOffset + 3, as: UInt8.self)
+                        } else if endianness == CFByteOrderBigEndian.rawValue {
+                            blue = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
+                            green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
+                            red = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
+                            alpha = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
+                        } else {
+                            print( "unknown")
+                        }
 
-                    // Assuming XRGB8888 format where each pixel is 4 bytes
-                    let blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
-                    let green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
-                    let red = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
-                    let alpha = frameBufferPtr.load(fromByteOffset: pixelOffset + 3, as: UInt8.self)
-
-
-                    pixelArray[rgbaOffset] = alpha
-                    pixelArray[rgbaOffset + 1] = red
-                    pixelArray[rgbaOffset + 2] = green
-                    pixelArray[rgbaOffset + 3] = blue
+                        pixelArray[rgbaOffset] = blue
+                        pixelArray[rgbaOffset + 1] = green
+                        pixelArray[rgbaOffset + 2] = red
+                        pixelArray[rgbaOffset + 3] = alpha
+                    }
                 }
             }
             
@@ -214,7 +168,7 @@ extension iRetroCoreProtocol {
     
     public var libretroInputPollCallback: @convention(c) () -> Void {
         return {
-            print("input poll")
+            //print("input poll")
         }
     }
     
@@ -235,6 +189,7 @@ extension iRetroCoreProtocol {
     
 }
 
+// Frontend/Complex interfaces
 extension iRetroCoreProtocol {
     public func setInputOutputCallbacks() {
         retroSetVideoRefresh(videoRefreshCallback: libretroVideoRefreshCallback)
@@ -261,8 +216,16 @@ extension iRetroCoreProtocol {
         }
     }
     
+    mutating public func deinitializeCore() {
+        if initialized == true {
+            retroDeinit()
+            initialized = false
+        }
+    }
+    
     mutating public func loadGame(gameURL: URL) {
         self.loadedGame = gameURL
+        iRetroCoreEmulationState.sharedInstance.currentGameURL = gameURL
         var filepath = gameURL.absoluteString
         gameURL.startAccessingSecurityScopedResource()
         var location = filepath.cString(using: String.Encoding.utf8)!
@@ -291,6 +254,12 @@ extension iRetroCoreProtocol {
         var rom_info = iRetroGameInfo(path: romNameCptr, data: data, size: romFile!.count, meta: nil)
         retroLoadGame(gameInfo: rom_info)
         
+    }
+    
+    mutating public func unloadGame() {
+        iRetroCoreEmulationState.sharedInstance.currentGameURL = nil
+        //TODO: empty the button pressed array
+        retroUnloadGame()
     }
     
     public func saveState(saveFileURL: URL) {
@@ -328,7 +297,6 @@ extension iRetroCoreProtocol {
 
 extension iRetroCoreProtocol {
     mutating public func pressButton(button: iRetroCoreButton) {
-        self.buttonsPressed.append(button.rawValue)
         iRetroCoreEmulationState.sharedInstance.buttonsPressed.append(button.rawValue)
     
     }
@@ -347,7 +315,6 @@ public func createCGImageFromXRGB8888(pixels: [UInt8], width: Int, height: Int) 
     
     let numBytes = pixels.count
     let bytesPerPixel = 4 // Each pixel is represented by 4 bytes in XRGB8888 format
-    let numComponents = 3 // XRGB format has three components per pixel (Red, Green, Blue)
     let bitsPerComponent = 8
     
     let colorspace = CGColorSpaceCreateDeviceRGB()
@@ -374,40 +341,3 @@ public func createCGImageFromXRGB8888(pixels: [UInt8], width: Int, height: Int) 
         intent: CGColorRenderingIntent.defaultIntent)
 }
 
-public func callbackOutputToPixelBuffer(frameBufferData: UnsafeRawPointer?, width: UInt32, height: UInt32, pitch: Int) -> [UInt8] {
-    guard let frameBufferPtr = frameBufferData else {
-        print("frame_buffer_data was null")
-        return []
-    }
-             
-    let height = Int(height)
-    let width = Int(width)
-    let pitch = pitch
-
-    let bytesPerPixel = 4 // Assuming XRGB8888 format
-    let lengthOfFrameBuffer = height * pitch // 294912
-
-    var pixelArray = [UInt8](repeating: 0, count: width * height * bytesPerPixel)
-    
-    for y in 0..<height {
-        let rowOffset = y * pitch
-        for x in 0..<width {
-            let pixelOffset = rowOffset + x * bytesPerPixel * 2 //TODO: Understand why I need to multiply this by two
-            let rgbaOffset = y * width * bytesPerPixel + x * bytesPerPixel
-
-            // Assuming XRGB8888 format where each pixel is 4 bytes
-            let blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
-            let green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
-            let red = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
-            let alpha = frameBufferPtr.load(fromByteOffset: pixelOffset + 3, as: UInt8.self)
-
-
-            pixelArray[rgbaOffset] = alpha
-            pixelArray[rgbaOffset + 1] = red
-            pixelArray[rgbaOffset + 2] = green
-            pixelArray[rgbaOffset + 3] = blue
-        }
-    }
-    
-    return pixelArray
-}
