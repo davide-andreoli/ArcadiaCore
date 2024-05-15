@@ -18,7 +18,7 @@ import QuartzCore
     public var mainBufferPixelFormat: ArcadiaCorePixelType = .pixelFormatXRGB8888
     public var currentFrame : CGImage? {
         get {
-            return createCGImage(pixels: mainBuffer, width: 160, height: 144)
+            return createCGImage(pixels: mainBuffer, width: audioVideoInfo?.geometry.width ?? 0, height: audioVideoInfo?.geometry.height ?? 0)
         }
         set (newValue) {
             // Just for binding
@@ -36,6 +36,10 @@ import QuartzCore
     
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
         
+        if width == 0 {
+            return nil
+        }
+        
         let numBytes = pixels.count
         let bytesPerPixel = 4
         let bitsPerComponent = 8
@@ -50,6 +54,8 @@ import QuartzCore
             return nil
         }
         
+        let bitmapInfo = CGBitmapInfo(rawValue: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.noneSkipFirst.rawValue)
+        
        
         return CGImage(
             width: width,
@@ -58,7 +64,7 @@ import QuartzCore
             bitsPerPixel: bytesPerPixel * bitsPerComponent,
             bytesPerRow: width * bytesPerPixel,
             space: colorspace,
-            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.noneSkipLast.rawValue), // Skip the first byte (alpha)
+            bitmapInfo: bitmapInfo, // Skip the last byte (alpha)
             provider: provider,
             decode: nil,
             shouldInterpolate: true,

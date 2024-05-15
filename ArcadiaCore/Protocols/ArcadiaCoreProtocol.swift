@@ -137,10 +137,12 @@ extension ArcadiaCoreProtocol {
                         pixelArray[rgbaOffset + 1] = green
                         pixelArray[rgbaOffset + 2] = red
                         pixelArray[rgbaOffset + 3] = alpha
+                    
                     }
                 }
+                
             }
-            
+            print("Blue: \(pixelArray[0]), Green: \(pixelArray[1]), Red: \(pixelArray[2])")
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
             
                       
@@ -200,10 +202,10 @@ extension ArcadiaCoreProtocol {
     }
     
     mutating public func getSystemAVInfo() {
-        //TODO: Understand if it makes senso to add it to Emulator State
         var avInfo = ArcadiaAudioVideoInfoType(geometry: ArcadiaGameGeometryType(base_width: 0, base_height: 0, max_width: 0, max_height: 0, aspect_ratio: 0.0) as! Self.ArcadiaAudioVideoInfoType.ArcadiaGeometryType,
                                               timing: ArcadiaSystemTimingType(fps: 0.0, sample_rate: 0.0) as! Self.ArcadiaAudioVideoInfoType.ArcadiaTimingType)
         retroGetSystemAVInfo(info: &avInfo)
+        ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo = ArcadiaAudioVideoInfo(avInfo: avInfo)
         self.audioVideoInfo = avInfo
     }
     

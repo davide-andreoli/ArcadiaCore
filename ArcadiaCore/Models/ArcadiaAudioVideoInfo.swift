@@ -21,6 +21,11 @@ public struct ArcadiaAudioVideoInfo: ArcadiaAudioVideoInfoProtocol {
         self.timing = timing
     }
     
+    public init(avInfo: any ArcadiaAudioVideoInfoProtocol) {
+        self.geometry = ArcadiaGeometryType(geometry: avInfo.geometry)
+        self.timing = ArcadiaSystemTiming(timing: avInfo.timing)
+    }
+    
 }
 
 public struct ArcadiaGeometry: ArcadiaGameGeometryProtocol {
@@ -40,6 +45,14 @@ public struct ArcadiaGeometry: ArcadiaGameGeometryProtocol {
         self.max_width = max_width
         self.max_height = max_height
         self.aspect_ratio = aspect_ratio
+    }
+    
+    public init(geometry: any ArcadiaGameGeometryProtocol) {
+        self.base_width = geometry.base_width
+        self.base_height = geometry.base_height
+        self.max_width = geometry.max_width
+        self.max_height = geometry.max_height
+        self.aspect_ratio = geometry.aspect_ratio
     }
     
     public var width: Int {
@@ -65,6 +78,11 @@ public struct ArcadiaSystemTiming: ArcadiaSystemTimingProtocol {
     public init(fps: Double, sample_rate: Double) {
         self.fps = fps
         self.sample_rate = sample_rate
+    }
+    
+    public init(timing: any ArcadiaSystemTimingProtocol) {
+        self.fps = timing.fps
+        self.sample_rate = timing.sample_rate
     }
     
     
