@@ -8,6 +8,11 @@
 import Foundation
 import CoreGraphics
 
+public protocol ArcadiaVariableProtocol {
+    var key: UnsafePointer<CChar>! { get set }
+    var value: UnsafePointer<CChar>! { get set }
+}
+
 public protocol ArcadiaCoreProtocol {
     
     associatedtype ArcadiaCoreType: ArcadiaCoreProtocol
@@ -15,6 +20,7 @@ public protocol ArcadiaCoreProtocol {
     associatedtype ArcadiaAudioVideoInfoType: ArcadiaAudioVideoInfoProtocol
     associatedtype ArcadiaGameGeometryType: ArcadiaGameGeometryProtocol
     associatedtype ArcadiaSystemTimingType: ArcadiaSystemTimingProtocol
+    associatedtype ArcadiaVariableType: ArcadiaVariableProtocol
     
     static var sharedInstance: ArcadiaCoreType { get set }
     
@@ -70,12 +76,43 @@ public protocol ArcadiaCoreProtocol {
     
 }
 
+enum ArcadiaCallbackType: UInt32 {
+    case SET_ROTATION = 1
+    case GET_OVERSCAN = 2
+    case GET_CAN_DUPE = 3
+    case SET_MESSAGE = 6
+    case SHUTDOWN = 7
+    case SET_PERFORMANCE_LEVEL = 8
+    case GET_SYSTEM_DIRECTORY = 9
+    case PIXEL_FORMAT = 10
+    case SET_INPUT_DESCRIPTORS = 11
+    case GET_VARIABLE = 15
+    case SET_VARIABLES = 16
+    case GET_VARIABLE_UPDATE = 17
+    case GET_RUMBLE_INTERFACE = 23
+    case GET_LOG_INTERFACE = 27
+    case GET_CORE_OPTIONS_VERSION = 52
+    case GET_MESSAGE_INTERFACE_VERSION = 59
+    case SET_FASTFORWARDING_OVERRIDE = 64
+    case SET_CORE_OPTIONS_UPDATE_DISPLAY_CALLBACK = 69
+    case SET_VARIABLE = 70
+
+}
+
+
+
+
 // Libretro Callbacks
 extension ArcadiaCoreProtocol {
     
     
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
+            if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
+                print(arcadiaCommand)
+            } else {
+                print("Unknown \(command)")
+            }
             switch command {
             case 3:
                 data?.storeBytes(of: true, as: Bool.self)
@@ -83,6 +120,52 @@ extension ArcadiaCoreProtocol {
             case 10:
                 ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat = ArcadiaCorePixelType(rawValue: data!.load(as: UInt32.self))
                 return true
+            case 15:
+                // Define your custom key and value
+                let customKey = "gambatte_gbc_color_correction"
+                let customValue = "disabled"
+                
+                // Convert Swift String to C-style string
+                let keyCString = strdup(customKey)
+                let valueCString = strdup(customValue)
+                
+                // Create retro_variable struct
+                var customVariable = retro_variable(key: keyCString, value: valueCString)
+                
+                // Allocate memory for retro_variable struct
+                let variableSize = MemoryLayout<retro_variable>.size
+                let variablePointer = UnsafeMutableRawPointer.allocate(byteCount: variableSize, alignment: 1)
+                
+                // Copy customVariable into memory
+                variablePointer.initializeMemory(as: retro_variable.self, from: &customVariable, count: 1)
+                
+                // Set the data parameter to point to the loaded retro_variable struct
+                data?.storeBytes(of: variablePointer, as: UnsafeMutableRawPointer?.self)
+                
+                // Free allocated C-style strings
+                free(keyCString)
+                free(valueCString)
+                
+                return true
+            case 16:
+                // Assuming data contains an array of retro_variable structs
+                // terminated by a { NULL, NULL } element
+                var variables: [retro_variable] = []
+                let pointer = data!.bindMemory(to: retro_variable.self, capacity: 1)
+                var index = 0
+                while pointer[index].key != nil {
+                    variables.append(pointer[index])
+                    index += 1
+                }
+                // Now you have an array of retro_variable structs, you can work with it here
+                // For example, iterate over variables and print key-value pairs
+                for variable in variables {
+                    guard let key = variable.key else { continue }
+                    guard let value = variable.value else { continue }
+                    print("Key: \(String(cString: key)), Value: \(String(cString: value))")
+                }
+                return true
+                
             default:
                 return false
             }
@@ -142,7 +225,6 @@ extension ArcadiaCoreProtocol {
                 }
                 
             }
-            print("Blue: \(pixelArray[0]), Green: \(pixelArray[1]), Red: \(pixelArray[2])")
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
             
                       

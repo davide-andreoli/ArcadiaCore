@@ -12,6 +12,9 @@
 		95456B9F2BE2AC0A00113B8A /* iRetroCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */; };
 		95456BA02BE2AC0A00113B8A /* ArcadiaCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 95456B922BE2AC0900113B8A /* ArcadiaCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		95456C3D2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95456C3C2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift */; };
+		955CB0052BF53B4B00C930ED /* libretro.h in Headers */ = {isa = PBXBuildFile; fileRef = 955CB0042BF53B4B00C930ED /* libretro.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		955CB0072BF53DD500C930ED /* libretro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 955CB0062BF53DD500C930ED /* libretro.cpp */; };
+		955CB0092BF733AC00C930ED /* iRetroCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 955CB0082BF733A800C930ED /* iRetroCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */; };
 		956F84172BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */; };
 		956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */; };
@@ -39,6 +42,9 @@
 		95456B992BE2AC0A00113B8A /* ArcadiaCoreTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ArcadiaCoreTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		95456B9E2BE2AC0A00113B8A /* iRetroCoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iRetroCoreTests.swift; sourceTree = "<group>"; };
 		95456C3C2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreProtocol.swift; sourceTree = "<group>"; };
+		955CB0042BF53B4B00C930ED /* libretro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libretro.h; sourceTree = "<group>"; };
+		955CB0062BF53DD500C930ED /* libretro.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = libretro.cpp; sourceTree = "<group>"; };
+		955CB0082BF733A800C930ED /* iRetroCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRetroCore.h; sourceTree = "<group>"; };
 		956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreEmulationState.swift; sourceTree = "<group>"; };
 		956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaGameGeometryProtocol.swift; sourceTree = "<group>"; };
 		956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaSystemTimingProtocol.swift; sourceTree = "<group>"; };
@@ -95,6 +101,9 @@
 				95456B922BE2AC0900113B8A /* ArcadiaCore.h */,
 				95456B932BE2AC0900113B8A /* ArcadiaCore.docc */,
 				956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */,
+				955CB0042BF53B4B00C930ED /* libretro.h */,
+				955CB0062BF53DD500C930ED /* libretro.cpp */,
+				955CB0082BF733A800C930ED /* iRetroCore.h */,
 			);
 			path = ArcadiaCore;
 			sourceTree = "<group>";
@@ -143,7 +152,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				955CB0092BF733AC00C930ED /* iRetroCore.h in Headers */,
 				95456BA02BE2AC0A00113B8A /* ArcadiaCore.h in Headers */,
+				955CB0052BF53B4B00C930ED /* libretro.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,6 +209,7 @@
 				TargetAttributes = {
 					95456B8E2BE2AC0900113B8A = {
 						CreatedOnToolsVersion = 15.3;
+						LastSwiftMigration = 1530;
 					};
 					95456B982BE2AC0A00113B8A = {
 						CreatedOnToolsVersion = 15.3;
@@ -254,6 +266,7 @@
 				956F84202BF3BF420025FC5F /* ArcadiaCorePixelType.swift in Sources */,
 				956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */,
 				95456C3D2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift in Sources */,
+				955CB0072BF53DD500C930ED /* libretro.cpp in Sources */,
 				956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -402,6 +415,7 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
@@ -433,6 +447,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -443,6 +458,7 @@
 			buildSettings = {
 				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEFINES_MODULE = YES;
