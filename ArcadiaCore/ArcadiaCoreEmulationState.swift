@@ -28,6 +28,8 @@ import QuartzCore
     public var currentAudioFrame = [Int16]()
     public var currentGameURL: URL? = nil
     
+    public var currentCoreOptions: [ArcadiaCoreOption] = []
+    
     public var mainGameLoop : Timer? = nil
     public var paused = false
     

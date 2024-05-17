@@ -77,31 +77,6 @@ public protocol ArcadiaCoreProtocol {
     
 }
 
-enum ArcadiaCallbackType: UInt32 {
-    case SET_ROTATION = 1
-    case GET_OVERSCAN = 2
-    case GET_CAN_DUPE = 3
-    case SET_MESSAGE = 6
-    case SHUTDOWN = 7
-    case SET_PERFORMANCE_LEVEL = 8
-    case GET_SYSTEM_DIRECTORY = 9
-    case PIXEL_FORMAT = 10
-    case SET_INPUT_DESCRIPTORS = 11
-    case GET_VARIABLE = 15
-    case SET_VARIABLES = 16
-    case GET_VARIABLE_UPDATE = 17
-    case GET_RUMBLE_INTERFACE = 23
-    case GET_LOG_INTERFACE = 27
-    case GET_CORE_OPTIONS_VERSION = 52
-    case GET_MESSAGE_INTERFACE_VERSION = 59
-    case SET_FASTFORWARDING_OVERRIDE = 64
-    case SET_CORE_OPTIONS_UPDATE_DISPLAY_CALLBACK = 69
-    case SET_VARIABLE = 70
-
-}
-
-
-
 
 // Libretro Callbacks
 extension ArcadiaCoreProtocol {
@@ -122,9 +97,11 @@ extension ArcadiaCoreProtocol {
                 ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat = ArcadiaCorePixelType(rawValue: data!.load(as: UInt32.self))
                 return true
             case 15:
+                // TODO: search for modified variables in the state and apply them
+                /*
                 // Define your custom key and value
-                let customKey = "gambatte_gbc_color_correction"
-                let customValue = "disabled"
+                let customKey = "gearboy_palette"
+                let customValue = "B/W"
                 
                 // Convert Swift String to C-style string
                 let keyCString = strdup(customKey)
@@ -146,7 +123,7 @@ extension ArcadiaCoreProtocol {
                 // Free allocated C-style strings
                 free(keyCString)
                 free(valueCString)
-                
+                */
                 return true
             case 16:
                 // Assuming data contains an array of retro_variable structs
@@ -158,12 +135,16 @@ extension ArcadiaCoreProtocol {
                     variables.append(pointer[index])
                     index += 1
                 }
-                // Now you have an array of retro_variable structs, you can work with it here
-                // For example, iterate over variables and print key-value pairs
+
                 for variable in variables {
                     guard let key = variable.key else { continue }
                     guard let value = variable.value else { continue }
                     print("Key: \(String(cString: key)), Value: \(String(cString: value))")
+                    let components = String(cString: value).components(separatedBy: ";")
+                    let description = components[0]
+                    let values = components[1].components(separatedBy: "|").map{ $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+                    ArcadiaCoreEmulationState.sharedInstance.currentCoreOptions.append(ArcadiaCoreOption(key: String(cString: key), description: description, values: values))
+                    
                 }
                 return true
                 
@@ -172,9 +153,9 @@ extension ArcadiaCoreProtocol {
             }
         }
     }
-    
+
     public var libretroVideoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void {
-        return {frameBufferData, width, height, pitch  in
+        return { frameBufferData, width, height, pitch in
             
             guard let frameBufferPtr = frameBufferData else {
                 print("frame_buffer_data was null")
@@ -184,55 +165,71 @@ extension ArcadiaCoreProtocol {
             let height = Int(height)
             let width = Int(width)
             let pitch = pitch
+            
+            let bytesPerPixel: Int
+            
+            if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
+                bytesPerPixel = 4 // XRGB8888 format
+            } else if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatRGB565 {
+                bytesPerPixel = 2 // RGB565 format
+            } else {
+                print("Unsupported pixel format")
+                return
+            }
 
-            let bytesPerPixel = 4 // Assuming XRGB8888 format
-            let lengthOfFrameBuffer = height * pitch // 294912
+            let lengthOfFrameBuffer = height * pitch
 
-            var pixelArray = [UInt8](repeating: 0, count: width * height * bytesPerPixel)
+            var pixelArray = [UInt8](repeating: 0, count: width * height * 4) // 4 bytes per pixel for output buffer
+            let endianness = CFByteOrderGetCurrent()
             
             for y in 0..<height {
                 let rowOffset = y * pitch
                 for x in 0..<width {
-                    let pixelOffset = rowOffset + x * bytesPerPixel * 2 //TODO: Understand why I need to multiply this by two
-                    let rgbaOffset = y * width * bytesPerPixel + x * bytesPerPixel
-                    
-                    let endianness = CFByteOrderGetCurrent()
-                    var red: UInt8 = 0
-                    var green: UInt8 = 0
-                    var blue: UInt8 = 0
-                    var alpha: UInt8 = 0
-                    
+                    let pixelOffset = rowOffset + x * bytesPerPixel
+                    let rgbaOffset = y * width * 4 + x * 4
+
                     if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
+                        
+                        let blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
+                        let green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
+                        let red = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
+                        let alpha = frameBufferPtr.load(fromByteOffset: pixelOffset + 3, as: UInt8.self)
+
                         if endianness == CFByteOrderLittleEndian.rawValue {
-                            blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
-                            green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
-                            red = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
-                            alpha = frameBufferPtr.load(fromByteOffset: pixelOffset + 3, as: UInt8.self)
+                             pixelArray[rgbaOffset] = blue
+                             pixelArray[rgbaOffset + 1] = green
+                             pixelArray[rgbaOffset + 2] = red
+                             pixelArray[rgbaOffset + 3] = alpha
                         } else if endianness == CFByteOrderBigEndian.rawValue {
-                            blue = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
-                            green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
-                            red = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
-                            alpha = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
+                            pixelArray[rgbaOffset] = red
+                            pixelArray[rgbaOffset + 1] = green
+                            pixelArray[rgbaOffset + 2] = blue
+                            pixelArray[rgbaOffset + 3] = alpha
                         } else {
-                            print( "unknown")
+                            print( "unknown endianness")
+                            return
                         }
+                        
+
+                    } else if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatRGB565 {
+                        let pixelData = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt16.self)
+                        
+                        let red = UInt8(((pixelData >> 11) & 0x1F) * 255 / 31)
+                        let green = UInt8(((pixelData >> 5) & 0x3F) * 255 / 63)
+                        let blue = UInt8((pixelData & 0x1F) * 255 / 31)
+                        let alpha: UInt8 = 255
 
                         pixelArray[rgbaOffset] = blue
                         pixelArray[rgbaOffset + 1] = green
                         pixelArray[rgbaOffset + 2] = red
                         pixelArray[rgbaOffset + 3] = alpha
-                    
                     }
                 }
-                //print("Red: \(pixelArray[2]), Green: \(pixelArray[1]), Blue: \(pixelArray[0]), Alpha: \(pixelArray[4])")
-                
             }
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
-            
-                      
         }
     }
-    
+        
     public var libretroAudioSampleCallback: @convention(c) (Int16, Int16) -> Void {
         return {left,right  in
             print("libretro_set_audio_sample_callback left channel: \(left) right: \(right)")

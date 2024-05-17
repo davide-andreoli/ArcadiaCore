@@ -15,6 +15,8 @@
 		955CB0052BF53B4B00C930ED /* libretro.h in Headers */ = {isa = PBXBuildFile; fileRef = 955CB0042BF53B4B00C930ED /* libretro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		955CB0072BF53DD500C930ED /* libretro.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 955CB0062BF53DD500C930ED /* libretro.cpp */; };
 		955CB0092BF733AC00C930ED /* iRetroCore.h in Headers */ = {isa = PBXBuildFile; fileRef = 955CB0082BF733A800C930ED /* iRetroCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		955CC37E2BF7E4AC00C930ED /* ArcadiaCoreOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC37D2BF7E4AC00C930ED /* ArcadiaCoreOption.swift */; };
+		955CC3802BF7E4C900C930ED /* ArcadiaCallbackType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC37F2BF7E4C900C930ED /* ArcadiaCallbackType.swift */; };
 		956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */; };
 		956F84172BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */; };
 		956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */; };
@@ -45,6 +47,8 @@
 		955CB0042BF53B4B00C930ED /* libretro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libretro.h; sourceTree = "<group>"; };
 		955CB0062BF53DD500C930ED /* libretro.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = libretro.cpp; sourceTree = "<group>"; };
 		955CB0082BF733A800C930ED /* iRetroCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = iRetroCore.h; sourceTree = "<group>"; };
+		955CC37D2BF7E4AC00C930ED /* ArcadiaCoreOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreOption.swift; sourceTree = "<group>"; };
+		955CC37F2BF7E4C900C930ED /* ArcadiaCallbackType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCallbackType.swift; sourceTree = "<group>"; };
 		956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreEmulationState.swift; sourceTree = "<group>"; };
 		956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaGameGeometryProtocol.swift; sourceTree = "<group>"; };
 		956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaSystemTimingProtocol.swift; sourceTree = "<group>"; };
@@ -133,6 +137,7 @@
 			children = (
 				956F841F2BF3BF420025FC5F /* ArcadiaCorePixelType.swift */,
 				956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */,
+				955CC37F2BF7E4C900C930ED /* ArcadiaCallbackType.swift */,
 			);
 			path = Enums;
 			sourceTree = "<group>";
@@ -141,6 +146,7 @@
 			isa = PBXGroup;
 			children = (
 				956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */,
+				955CC37D2BF7E4AC00C930ED /* ArcadiaCoreOption.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -260,12 +266,14 @@
 				95456B942BE2AC0900113B8A /* ArcadiaCore.docc in Sources */,
 				956F841B2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift in Sources */,
 				956F841D2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift in Sources */,
+				955CC3802BF7E4C900C930ED /* ArcadiaCallbackType.swift in Sources */,
 				956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */,
 				956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */,
 				956F84172BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift in Sources */,
 				956F84202BF3BF420025FC5F /* ArcadiaCorePixelType.swift in Sources */,
 				956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */,
 				95456C3D2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift in Sources */,
+				955CC37E2BF7E4AC00C930ED /* ArcadiaCoreOption.swift in Sources */,
 				955CB0072BF53DD500C930ED /* libretro.cpp in Sources */,
 				956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */,
 			);
