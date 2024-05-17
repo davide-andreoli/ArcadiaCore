@@ -46,6 +46,7 @@ public protocol ArcadiaCoreProtocol {
     func retroGetSystemAVInfo(info: UnsafeMutablePointer<ArcadiaAudioVideoInfoType>!)
     func retroDeinit()
     func retroRun()
+    func retroReset()
     func retroLoadGame(gameInfo: ArcadiaGameInfo)
     func retroUnloadGame()
     func retroSerializeSize() -> Int
@@ -223,6 +224,7 @@ extension ArcadiaCoreProtocol {
                     
                     }
                 }
+                //print("Red: \(pixelArray[2]), Green: \(pixelArray[1]), Blue: \(pixelArray[0]), Alpha: \(pixelArray[4])")
                 
             }
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
