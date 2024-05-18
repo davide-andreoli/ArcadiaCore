@@ -85,7 +85,7 @@ extension ArcadiaCoreProtocol {
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
             if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-                print(arcadiaCommand)
+                //print(arcadiaCommand)
             } else {
                 print("Unknown \(command)")
             }
@@ -380,8 +380,11 @@ extension ArcadiaCoreProtocol {
     }
     
     public func saveMemoryData(memoryId: UInt32, saveFileURL: URL) {
-        let saveSize = retroGetMemorySize(memoryDataId: memoryId)
         
+        let saveSize = retroGetMemorySize(memoryDataId: memoryId)
+        if saveSize == 0 {
+            return
+        }
         var saveBuffer = [UInt8](repeating: 0, count: saveSize)
         
         guard let memoryPosition = retroGetMemoryData(memoryDataId: memoryId) else {

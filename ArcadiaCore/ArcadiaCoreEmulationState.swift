@@ -30,6 +30,7 @@ import QuartzCore
     public var buttonsPressed : [Int16] = []
     public var currentAudioFrame = [Int16]()
     public var currentGameURL: URL? = nil
+    public var currentSaveFolder: URL? = nil
     
     public var currentCoreOptions: [ArcadiaCoreOption] = []
     
