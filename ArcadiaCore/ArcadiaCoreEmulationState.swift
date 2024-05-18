@@ -24,6 +24,9 @@ import QuartzCore
             // Just for binding
         }
     }
+    
+    public var currentCore: (any ArcadiaCoreProtocol)? = nil
+    
     public var buttonsPressed : [Int16] = []
     public var currentAudioFrame = [Int16]()
     public var currentGameURL: URL? = nil
@@ -33,8 +36,50 @@ import QuartzCore
     public var mainGameLoop : Timer? = nil
     public var paused = false
     
+    public func attachCore(core: any ArcadiaCoreProtocol) {
+        if self.currentCore == nil {
+            if type(of: self.currentCore) == type(of: core) {
+                return
+            } else {
+                self.currentCore = core
+            }
+        }
+    }
+    
     //TODO: Should the current state keep track of current game state (paused, etc?)
     //TODO: Should the current state contain the main timer (or display link) and let the core attach the relevant loop when needed?
+    
+    public func startEmulation(gameURL: URL) {
+        if self.currentGameURL != nil {
+            print("1")
+            if self.currentGameURL == gameURL {
+                print("2")
+                self.currentCore?.resumeGame()
+            } else {
+                self.currentCore?.stopGameLoop()
+                self.currentCore?.unloadGame()
+                //TODO: Understand if it's really necessary to deinit the core
+                self.currentCore?.deinitializeCore()
+                self.currentCore?.initializeCore()
+                self.currentCore?.loadGame(gameURL: gameURL)
+                self.currentCore?.setInputOutputCallbacks()
+                self.currentCore?.startGameLoop()
+            }
+        } else {
+            self.currentCore?.initializeCore()
+            self.currentCore?.loadGame(gameURL: gameURL)
+            self.currentCore?.setInputOutputCallbacks()
+            self.currentCore?.startGameLoop()
+        }
+    }
+    
+    public func pauseEmulation () {
+        self.currentCore?.pauseGame()
+    }
+    
+    public func pressButton(button: ArcadiaCoreButton) {
+        buttonsPressed.append(button.rawValue)
+    }
     
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
         

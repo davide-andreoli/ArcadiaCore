@@ -21,16 +21,13 @@ public protocol ArcadiaCoreProtocol {
     associatedtype ArcadiaGameGeometryType: ArcadiaGameGeometryProtocol
     associatedtype ArcadiaSystemTimingType: ArcadiaSystemTimingProtocol
     associatedtype ArcadiaVariableType: ArcadiaVariableProtocol
-    
-    static var sharedInstance: ArcadiaCoreType { get set }
-    
+        
     var paused: Bool {get set}
     var initialized: Bool {get set}
     var mainGameLoop : Timer? {get set}
     var loadedGame: URL? {get set}
     
     var audioVideoInfo: ArcadiaAudioVideoInfoType {get set}
-    var pitch: Int {get set}
 
     
     // Libretro Callbacks
@@ -52,6 +49,8 @@ public protocol ArcadiaCoreProtocol {
     func retroSerializeSize() -> Int
     func retroSerialize(data: UnsafeMutableRawPointer!, size: Int)
     func retroUnserialize(data: UnsafeRawPointer!, size: Int)
+    func retroGetMemorySize(memoryDataId: UInt32) -> Int
+    func retroGetMemoryData(memoryDataId: UInt32) -> UnsafeMutableRawPointer!
     func retroSetEnvironment(environmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool)
     func retroSetVideoRefresh(videoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void)
     func retroSetAudioSample(audioSampleCallback: @convention(c) (Int16, Int16) -> Void)
@@ -68,8 +67,9 @@ public protocol ArcadiaCoreProtocol {
     mutating func unloadGame()
     func saveState(saveFileURL: URL)
     func loadState(saveFileURL: URL)
+    func saveMemoryData(memoryId: UInt32, saveFileURL: URL)
+    func loadMemoryData(memoryId: UInt32)
     
-    mutating func pressButton(button: ArcadiaCoreButton)
     func startGameLoop()
     func stopGameLoop()
     mutating func pauseGame()
@@ -347,6 +347,9 @@ extension ArcadiaCoreProtocol {
     
     public func saveState(saveFileURL: URL) {
         let stateSize = retroSerializeSize()
+        if stateSize == 0 {
+            return
+        }
         var stateBuffer = [UInt8](repeating: 0, count: stateSize)
         
         stateBuffer.withUnsafeMutableBytes { bufferPointer in
@@ -376,13 +379,36 @@ extension ArcadiaCoreProtocol {
         }
     }
     
+    public func saveMemoryData(memoryId: UInt32, saveFileURL: URL) {
+        let saveSize = retroGetMemorySize(memoryDataId: memoryId)
+        
+        var saveBuffer = [UInt8](repeating: 0, count: saveSize)
+        
+        guard let memoryPosition = retroGetMemoryData(memoryDataId: memoryId) else {
+            print("Failed to retrieve memory data.")
+            return
+        }
+        
+        saveBuffer.withUnsafeMutableBytes { bufferPointer in
+            guard let baseAddress = bufferPointer.baseAddress else { return }
+            baseAddress.copyMemory(from: memoryPosition, byteCount: Int(saveSize))
+        }
+        
+        do {
+            try Data(saveBuffer).write(to: saveFileURL)
+            print("Memory data saved successfully.")
+        } catch {
+            print("Error saving memory data: \(error)")
+        }
+        
+    }
+    public func loadMemoryData(memoryId: UInt32) {
+        //TODO: load save file, and copy data into memory position???
+    }
+    
 }
 
 extension ArcadiaCoreProtocol {
-    mutating public func pressButton(button: ArcadiaCoreButton) {
-        ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.append(button.rawValue)
-    
-    }
     
     mutating public func pauseGame() {
         self.paused = true
