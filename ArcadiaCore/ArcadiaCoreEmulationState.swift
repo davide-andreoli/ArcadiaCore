@@ -9,6 +9,8 @@ import Foundation
 import CoreGraphics
 import QuartzCore
 
+
+
 @Observable public class ArcadiaCoreEmulationState {
     
     public static var sharedInstance = ArcadiaCoreEmulationState()
@@ -25,11 +27,14 @@ import QuartzCore
         }
     }
     
+    //TODO: the current core propery might be not useful now that the currentGameType can return the core
     public var currentCore: (any ArcadiaCoreProtocol)? = nil
+    public var currentGameType: (any ArcadiaGameTypeProtocol)? = nil
     
     public var buttonsPressed : [Int16] = []
     public var currentAudioFrame = [Int16]()
     public var currentGameURL: URL? = nil
+
     public var currentSaveFolder: URL? = nil
     
     public var currentCoreOptions: [ArcadiaCoreOption] = []
@@ -49,28 +54,63 @@ import QuartzCore
     
     //TODO: Should the current state keep track of current game state (paused, etc?)
     //TODO: Should the current state contain the main timer (or display link) and let the core attach the relevant loop when needed?
+        
+    public func startGameLoop() {
+        mainGameLoop = Timer.scheduledTimer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(gameLoop), userInfo: nil, repeats: true)
+        RunLoop.current.add(mainGameLoop!, forMode: .default)
+        paused = false
+    }
+    
+    public func stopGameLoop() {
+        mainGameLoop?.invalidate()
+        mainGameLoop = nil
+        paused = true
+    }
+    
+    
+    @objc func gameLoop() {
+        if !paused {
+            self.currentCore?.retroRun()
+            
+            guard let checkResult = self.currentCore?.checkForSaveRamModification(memoryDataId: 0) else {
+                return
+            }
+            if checkResult {
+                print("Save File modified")
+                self.currentCore?.saveMemoryData(memoryId: 0, saveFileURL: ArcadiaCoreEmulationState.sharedInstance.currentSaveFolder!)
+            }
+        }
+    }
     
     public func startEmulation(gameURL: URL) {
         if self.currentGameURL != nil {
-            print("1")
             if self.currentGameURL == gameURL {
-                print("2")
                 self.currentCore?.resumeGame()
             } else {
-                self.currentCore?.stopGameLoop()
+                self.stopGameLoop()
                 self.currentCore?.unloadGame()
                 //TODO: Understand if it's really necessary to deinit the core
                 self.currentCore?.deinitializeCore()
                 self.currentCore?.initializeCore()
                 self.currentCore?.loadGame(gameURL: gameURL)
+                if FileManager.default.fileExists(atPath: self.currentSaveFolder?.path ?? "") {
+                    self.currentCore?.loadBatterySave(from: self.currentSaveFolder!, memoryDataId: 0)
+                } else {
+                    self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: 0)
+                }
                 self.currentCore?.setInputOutputCallbacks()
-                self.currentCore?.startGameLoop()
+                self.startGameLoop()
             }
         } else {
             self.currentCore?.initializeCore()
             self.currentCore?.loadGame(gameURL: gameURL)
+            if FileManager.default.fileExists(atPath: self.currentSaveFolder?.path ?? "") {
+                self.currentCore?.loadBatterySave(from: self.currentSaveFolder!, memoryDataId: 0)
+            } else {
+                self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: 0)
+            }
             self.currentCore?.setInputOutputCallbacks()
-            self.currentCore?.startGameLoop()
+            self.startGameLoop()
         }
     }
     

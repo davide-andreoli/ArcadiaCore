@@ -24,11 +24,10 @@ public protocol ArcadiaCoreProtocol {
         
     var paused: Bool {get set}
     var initialized: Bool {get set}
-    var mainGameLoop : Timer? {get set}
     var loadedGame: URL? {get set}
+    var initialSaveRamSnapshot: [UInt8]? {get set}
     
     var audioVideoInfo: ArcadiaAudioVideoInfoType {get set}
-
     
     // Libretro Callbacks
     var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {get}
@@ -68,10 +67,9 @@ public protocol ArcadiaCoreProtocol {
     func saveState(saveFileURL: URL)
     func loadState(saveFileURL: URL)
     func saveMemoryData(memoryId: UInt32, saveFileURL: URL)
-    func loadMemoryData(memoryId: UInt32)
-    
-    func startGameLoop()
-    func stopGameLoop()
+    mutating func loadBatterySave(from location: URL, memoryDataId: UInt32)
+    mutating func takeInitialSaveRamSnapshot(memoryDataId: UInt32)
+    mutating func checkForSaveRamModification(memoryDataId: UInt32) -> Bool
     mutating func pauseGame()
     mutating func resumeGame()
     
@@ -380,7 +378,7 @@ extension ArcadiaCoreProtocol {
     }
     
     public func saveMemoryData(memoryId: UInt32, saveFileURL: URL) {
-        
+        print("Saving memory data")
         let saveSize = retroGetMemorySize(memoryDataId: memoryId)
         if saveSize == 0 {
             return
@@ -399,14 +397,56 @@ extension ArcadiaCoreProtocol {
         
         do {
             try Data(saveBuffer).write(to: saveFileURL)
-            print("Memory data saved successfully.")
+            print("Memory data saved successfully in \(saveFileURL).")
         } catch {
             print("Error saving memory data: \(error)")
         }
         
     }
-    public func loadMemoryData(memoryId: UInt32) {
-        //TODO: load save file, and copy data into memory position???
+    
+    mutating public func takeInitialSaveRamSnapshot(memoryDataId: UInt32) {
+        guard let saveRamPointer = retroGetMemoryData(memoryDataId: memoryDataId) else { return }
+        let saveRamSize = retroGetMemorySize(memoryDataId: memoryDataId)
+        
+        if saveRamSize > 0 {
+            let initialSaveRam = saveRamPointer.assumingMemoryBound(to: UInt8.self)
+            self.initialSaveRamSnapshot = Array(UnsafeBufferPointer(start: initialSaveRam, count: saveRamSize))
+        }
+    }
+    
+    mutating public func checkForSaveRamModification(memoryDataId: UInt32) -> Bool {
+        guard let currentSaveRamPointer = retroGetMemoryData(memoryDataId: memoryDataId)?.assumingMemoryBound(to: UInt8.self),
+              let saveRamSnapshot = self.initialSaveRamSnapshot else { return false }
+        let saveRamSize = retroGetMemorySize(memoryDataId: memoryDataId)
+        let currentSaveRam = Array(UnsafeBufferPointer(start: currentSaveRamPointer, count: saveRamSize))
+        
+        if currentSaveRam != saveRamSnapshot {
+            // Update the snapshot with the current state
+            self.initialSaveRamSnapshot = currentSaveRam
+            return true // Save RAM has been modified
+        }
+        return false // No changes detected
+    }
+    
+    mutating public func loadBatterySave(from location: URL, memoryDataId: UInt32) {
+        print("Loading battery save")
+        guard let saveRamPointer = retroGetMemoryData(memoryDataId: memoryDataId)?.assumingMemoryBound(to: UInt8.self) else {
+            print("Failed to get save RAM pointer")
+            return
+        }
+        let saveRamSize = retroGetMemorySize(memoryDataId: memoryDataId)
+        
+        do {
+            let data = try Data(contentsOf: location)
+            guard data.count == saveRamSize else {
+                print("Save file size does not match expected size")
+                return
+            }
+            data.copyBytes(to: saveRamPointer, count: saveRamSize)
+            self.initialSaveRamSnapshot = [UInt8](data)
+        } catch {
+            print("Failed to load battery save: \(error)")
+        }
     }
     
 }

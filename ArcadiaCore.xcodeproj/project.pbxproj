@@ -18,6 +18,7 @@
 		955CC37E2BF7E4AC00C930ED /* ArcadiaCoreOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC37D2BF7E4AC00C930ED /* ArcadiaCoreOption.swift */; };
 		955CC3802BF7E4C900C930ED /* ArcadiaCallbackType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC37F2BF7E4C900C930ED /* ArcadiaCallbackType.swift */; };
 		955CC3862BF7F61600C930ED /* ArcadiaCoreMemoryType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC3852BF7F61600C930ED /* ArcadiaCoreMemoryType.swift */; };
+		955CC3962BF916A600C930ED /* ArcadiaGameTypeProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC3952BF916A600C930ED /* ArcadiaGameTypeProtocol.swift */; };
 		956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */; };
 		956F84172BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */; };
 		956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */; };
@@ -51,6 +52,7 @@
 		955CC37D2BF7E4AC00C930ED /* ArcadiaCoreOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreOption.swift; sourceTree = "<group>"; };
 		955CC37F2BF7E4C900C930ED /* ArcadiaCallbackType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCallbackType.swift; sourceTree = "<group>"; };
 		955CC3852BF7F61600C930ED /* ArcadiaCoreMemoryType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreMemoryType.swift; sourceTree = "<group>"; };
+		955CC3952BF916A600C930ED /* ArcadiaGameTypeProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaGameTypeProtocol.swift; sourceTree = "<group>"; };
 		956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreEmulationState.swift; sourceTree = "<group>"; };
 		956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaGameGeometryProtocol.swift; sourceTree = "<group>"; };
 		956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaSystemTimingProtocol.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				956F84162BF3BEB80025FC5F /* ArcadiaGameGeometryProtocol.swift */,
 				956F84182BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift */,
 				956F841A2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift */,
+				955CC3952BF916A600C930ED /* ArcadiaGameTypeProtocol.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -279,6 +282,7 @@
 				95456C3D2BE2B4F100113B8A /* ArcadiaCoreProtocol.swift in Sources */,
 				955CC37E2BF7E4AC00C930ED /* ArcadiaCoreOption.swift in Sources */,
 				955CB0072BF53DD500C930ED /* libretro.cpp in Sources */,
+				955CC3962BF916A600C930ED /* ArcadiaGameTypeProtocol.swift in Sources */,
 				956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -439,7 +443,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
@@ -482,7 +486,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
