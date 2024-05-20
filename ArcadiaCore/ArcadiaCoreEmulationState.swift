@@ -40,6 +40,7 @@ import QuartzCore
     public var currentCoreOptions: [ArcadiaCoreOption] = []
     
     public var mainGameLoop : Timer? = nil
+    public var checkSaveLoop: DispatchSourceTimer? = nil
     public var paused = false
     
     public func attachCore(core: any ArcadiaCoreProtocol) {
@@ -58,12 +59,14 @@ import QuartzCore
     public func startGameLoop() {
         mainGameLoop = Timer.scheduledTimer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(gameLoop), userInfo: nil, repeats: true)
         RunLoop.current.add(mainGameLoop!, forMode: .default)
+        startSaveRamMonitoring()
         paused = false
     }
     
     public func stopGameLoop() {
         mainGameLoop?.invalidate()
         mainGameLoop = nil
+        stopSaveRamMonitoring()
         paused = true
     }
     
@@ -71,16 +74,36 @@ import QuartzCore
     @objc func gameLoop() {
         if !paused {
             self.currentCore?.retroRun()
-            
+        }
+    }
+    
+    func startSaveRamMonitoring() {
+        let queue = DispatchQueue(label: "com.Arcadia.saveRamMonitoringQueue", qos: .background)
+        
+        self.checkSaveLoop = DispatchSource.makeTimerSource(queue: queue)
+        self.checkSaveLoop?.schedule(deadline: .now(), repeating: 1)
+        self.checkSaveLoop?.setEventHandler { [weak self] in
+            guard let self = self else { return }
+            if !paused {
             guard let checkResult = self.currentCore?.checkForSaveRamModification(memoryDataId: 0) else {
                 return
             }
-            if checkResult {
-                print("Save File modified")
-                self.currentCore?.saveMemoryData(memoryId: 0, saveFileURL: ArcadiaCoreEmulationState.sharedInstance.currentSaveFolder!)
+            
+                if checkResult {
+                    print("Save File modified")
+                    self.currentCore?.saveMemoryData(memoryId: 0, saveFileURL: ArcadiaCoreEmulationState.sharedInstance.currentSaveFolder!)
+                }
             }
         }
+        self.checkSaveLoop?.resume()
     }
+    
+    func stopSaveRamMonitoring() {
+        self.checkSaveLoop?.cancel()
+        self.checkSaveLoop = nil
+    }
+    
+
     
     public func startEmulation(gameURL: URL) {
         if self.currentGameURL != nil {
