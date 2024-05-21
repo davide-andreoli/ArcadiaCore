@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreGraphics
+import LibretroCommon
 
 public protocol ArcadiaVariableProtocol {
     var key: UnsafePointer<CChar>! { get set }
@@ -151,7 +152,20 @@ extension ArcadiaCoreProtocol {
             }
         }
     }
-
+    
+    public var libretroVideoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void {
+        return { frameBufferData, width, height, pitch in
+            
+            guard let pointer = libretro_video_refresh_callback(frameBufferData, width, height, Int32(pitch), retro_pixel_format(ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat.rawValue)) else {
+                return
+            }
+            let length = Int(width * height * 4)
+            let bufferPointer = UnsafeBufferPointer(start: pointer, count: length)
+            ArcadiaCoreEmulationState.sharedInstance.mainBuffer = Array(bufferPointer)
+            free(pointer)
+        }
+    }
+    /*
     public var libretroVideoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void {
         return { frameBufferData, width, height, pitch in
             
@@ -227,7 +241,7 @@ extension ArcadiaCoreProtocol {
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
         }
     }
-        
+    */
     public var libretroAudioSampleCallback: @convention(c) (Int16, Int16) -> Void {
         return {left,right  in
             print("libretro_set_audio_sample_callback left channel: \(left) right: \(right)")
@@ -241,8 +255,14 @@ extension ArcadiaCoreProtocol {
             let audioBuffer = UnsafeBufferPointer(start: audioData, count: frames * 2)
             let audioSlice = Array(audioBuffer)
             //let audioSliceData = Data(bytes: audioSlice, count: audioSlice.count * MemoryLayout<Int16>.size)
-            ArcadiaCoreEmulationState.sharedInstance.currentAudioFrame = audioSlice
+            let pointer = UnsafeMutablePointer<Float>.allocate(capacity: frames * 2)
+            convert_s16_to_float(pointer, data, frames * 2, 1)
             
+            let audioBufferFloat = UnsafeBufferPointer(start: pointer, count: frames * 2)
+            let audioSliceFloat = Array(audioBufferFloat)
+            //TODO: Remove Int16 data
+            ArcadiaCoreEmulationState.sharedInstance.currentAudioFrame = audioSlice
+            ArcadiaCoreEmulationState.sharedInstance.currentAudioFrameFloat = audioSliceFloat
             return frames
         }
     }
@@ -255,14 +275,16 @@ extension ArcadiaCoreProtocol {
     
     public var libretroInputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16 {
         return {port,device,index,id in
-
+            
+            
             if !ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.isEmpty {
                 if ArcadiaCoreEmulationState.sharedInstance.buttonsPressed[0] == Int(id) {
-                    ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.remove(at: 0)
+                    ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.removeFirst()
                     return Int16(1)
                 }
             }
             return Int16(0)
+            
         }
     }
     

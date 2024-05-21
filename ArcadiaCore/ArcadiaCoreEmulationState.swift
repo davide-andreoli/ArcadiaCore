@@ -33,6 +33,7 @@ import QuartzCore
     
     public var buttonsPressed : [Int16] = []
     public var currentAudioFrame = [Int16]()
+    public var currentAudioFrameFloat = [Float]()
     public var currentGameURL: URL? = nil
 
     public var currentSaveFolder: URL? = nil
