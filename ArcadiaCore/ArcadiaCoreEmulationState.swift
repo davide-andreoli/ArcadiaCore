@@ -55,10 +55,7 @@ import QuartzCore
             }
         }
     }
-    
-    //TODO: Should the current state keep track of current game state (paused, etc?)
-    //TODO: Should the current state contain the main timer (or display link) and let the core attach the relevant loop when needed?
-        
+            
     public func startGameLoop() {
         let gameLoopQueue = DispatchQueue(label: "com.Arcadia.gameLoop", attributes: .concurrent)
         if gameLoopTimer == nil {
