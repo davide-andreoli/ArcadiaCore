@@ -83,6 +83,29 @@ import QuartzCore
             self.currentCore?.retroRun()
         }
     }
+    /*
+     main thread game loop
+     public func startGameLoop() {
+         mainGameLoop = Timer.scheduledTimer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(gameLoop), userInfo: nil, repeats: true)
+         RunLoop.current.add(mainGameLoop!, forMode: .default)
+         startSaveRamMonitoring()
+         paused = false
+     }
+     
+     public func stopGameLoop() {
+         mainGameLoop?.invalidate()
+         mainGameLoop = nil
+         stopSaveRamMonitoring()
+         paused = true
+     }
+     
+     
+     @objc func gameLoop() {
+         if !paused {
+             self.currentCore?.retroRun()
+         }
+     }
+     */
     
     func startSaveRamMonitoring() {
         let queue = DispatchQueue(label: "com.Arcadia.saveRamMonitoringQueue", qos: .background)
