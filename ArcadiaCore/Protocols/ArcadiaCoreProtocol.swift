@@ -84,7 +84,7 @@ extension ArcadiaCoreProtocol {
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
             if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-                //print(arcadiaCommand)
+               // print(arcadiaCommand)
             } else {
                 print("Unknown \(command)")
             }
@@ -94,6 +94,42 @@ extension ArcadiaCoreProtocol {
                 return true
             case 10:
                 ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat = ArcadiaCorePixelType(rawValue: data!.load(as: UInt32.self))
+                return true
+            case 11:
+                // Assuming data contains an array of retro_input_descriptors structs
+                // terminated by a { NULL, NULL } element
+                var variables: [retro_input_descriptor] = []
+                let pointer = data!.bindMemory(to: retro_input_descriptor.self, capacity: 1)
+                var index = 0
+                while pointer[index].description != nil {
+                    variables.append(pointer[index])
+                    index += 1
+                }
+
+                for variable in variables {
+                    guard let description = variable.description else { continue }
+                    let device = variable.device
+                    let port = variable.port
+                    let id = variable.id
+                    print("Description: \(String(cString: description)), device: \(device), port: \(port), id: \(id)")
+
+
+                    if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port] == nil {
+                        ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port] = [:]
+                    }
+                    
+                    if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device] == nil {
+                        ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device] = [:]
+                    }
+                    
+                    if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[0] == nil {
+                        ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[0] = [:]
+                    }
+                    if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[0]?[id] == nil {
+                        ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[0]?[id] = Int16(0)
+                    }
+                    
+                }
                 return true
             case 15:
                 // TODO: search for modified variables in the state and apply them
@@ -275,8 +311,15 @@ extension ArcadiaCoreProtocol {
     
     public var libretroInputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16 {
         return {port,device,index,id in
+            //print("polling port: \(port), dev: \(device), index: \(index), id: \(id)")
+            if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] == 1 {
+                ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] = 0
+                return Int16(1)
+            }
             
+            return Int16(0)
             
+            /*
             if !ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.isEmpty {
                 if ArcadiaCoreEmulationState.sharedInstance.buttonsPressed[0] == Int(id) {
                     ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.removeFirst()
@@ -284,7 +327,7 @@ extension ArcadiaCoreProtocol {
                 }
             }
             return Int16(0)
-            
+            */
         }
     }
     

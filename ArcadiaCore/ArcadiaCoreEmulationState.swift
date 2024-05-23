@@ -32,6 +32,7 @@ import QuartzCore
     public var currentGameType: (any ArcadiaGameTypeProtocol)? = nil
     
     public var buttonsPressed : [Int16] = []
+    public var pressedButtons: [UInt32 : [UInt32 : [UInt32 : [UInt32 : Int16]]]] = [:]
     public var currentAudioFrame = [Int16]()
     public var currentAudioFrameFloat = [Float]()
     public var currentGameURL: URL? = nil
@@ -42,6 +43,7 @@ import QuartzCore
     
     public var mainGameLoop : Timer? = nil
     public var checkSaveLoop: DispatchSourceTimer? = nil
+    private var gameLoopTimer: DispatchSourceTimer? = nil
     public var paused = false
     
     public func attachCore(core: any ArcadiaCoreProtocol) {
@@ -58,15 +60,22 @@ import QuartzCore
     //TODO: Should the current state contain the main timer (or display link) and let the core attach the relevant loop when needed?
         
     public func startGameLoop() {
-        mainGameLoop = Timer.scheduledTimer(timeInterval: 1.0 / 60.0, target: self, selector: #selector(gameLoop), userInfo: nil, repeats: true)
-        RunLoop.current.add(mainGameLoop!, forMode: .default)
-        startSaveRamMonitoring()
-        paused = false
+        let gameLoopQueue = DispatchQueue(label: "com.Arcadia.gameLoop", attributes: .concurrent)
+        if gameLoopTimer == nil {
+            gameLoopTimer = DispatchSource.makeTimerSource(queue: gameLoopQueue)
+            gameLoopTimer?.schedule(deadline: .now(), repeating: 1.0 / 60.0)
+            gameLoopTimer?.setEventHandler { [weak self] in
+                self?.gameLoop()
+            }
+            gameLoopTimer?.resume()
+            startSaveRamMonitoring()
+            paused = false
+        }
     }
     
     public func stopGameLoop() {
-        mainGameLoop?.invalidate()
-        mainGameLoop = nil
+        gameLoopTimer?.cancel()
+        gameLoopTimer = nil
         stopSaveRamMonitoring()
         paused = true
     }
@@ -142,8 +151,12 @@ import QuartzCore
         self.currentCore?.pauseGame()
     }
     
-    public func pressButton(button: ArcadiaCoreButton) {
+    public func pressButton(button: ArcadiaCoreButton, device: UInt32 = 0) {
         buttonsPressed.append(button.rawValue)
+    }
+    
+    public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
+        self.pressedButtons[port]?[device]?[index]?[UInt32(id.rawValue)] = 1
     }
     
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
