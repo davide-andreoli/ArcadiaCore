@@ -189,6 +189,7 @@ extension ArcadiaCoreProtocol {
         }
     }
     
+    
     public var libretroVideoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void {
         return { frameBufferData, width, height, pitch in
             
@@ -201,33 +202,31 @@ extension ArcadiaCoreProtocol {
             free(pointer)
         }
     }
-    /*
+     /*
     public var libretroVideoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void {
         return { frameBufferData, width, height, pitch in
-            
             guard let frameBufferPtr = frameBufferData else {
                 print("frame_buffer_data was null")
                 return
             }
-                     
+            
             let height = Int(height)
             let width = Int(width)
-            let pitch = pitch
-            
             let bytesPerPixel: Int
+            let pixelFormat = ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat
             
-            if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
+            switch pixelFormat {
+            case .pixelFormatXRGB8888:
                 bytesPerPixel = 4 // XRGB8888 format
-            } else if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatRGB565 {
+            case .pixelFormatRGB565:
                 bytesPerPixel = 2 // RGB565 format
-            } else {
+            default:
                 print("Unsupported pixel format")
                 return
             }
-
-            let lengthOfFrameBuffer = height * pitch
-
-            var pixelArray = [UInt8](repeating: 0, count: width * height * 4) // 4 bytes per pixel for output buffer
+            
+            let pixelArraySize = width * height * 4
+            var pixelArray = [UInt8](repeating: 0, count: pixelArraySize)
             let endianness = CFByteOrderGetCurrent()
             
             for y in 0..<height {
@@ -235,49 +234,50 @@ extension ArcadiaCoreProtocol {
                 for x in 0..<width {
                     let pixelOffset = rowOffset + x * bytesPerPixel
                     let rgbaOffset = y * width * 4 + x * 4
-
-                    if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatXRGB8888 {
-                        
+                    
+                    switch pixelFormat {
+                    case .pixelFormatXRGB8888:
                         let blue = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt8.self)
                         let green = frameBufferPtr.load(fromByteOffset: pixelOffset + 1, as: UInt8.self)
                         let red = frameBufferPtr.load(fromByteOffset: pixelOffset + 2, as: UInt8.self)
                         let alpha = frameBufferPtr.load(fromByteOffset: pixelOffset + 3, as: UInt8.self)
-
+                        
                         if endianness == CFByteOrderLittleEndian.rawValue {
-                             pixelArray[rgbaOffset] = blue
-                             pixelArray[rgbaOffset + 1] = green
-                             pixelArray[rgbaOffset + 2] = red
-                             pixelArray[rgbaOffset + 3] = alpha
+                            pixelArray[rgbaOffset] = blue
+                            pixelArray[rgbaOffset + 1] = green
+                            pixelArray[rgbaOffset + 2] = red
+                            pixelArray[rgbaOffset + 3] = alpha
                         } else if endianness == CFByteOrderBigEndian.rawValue {
                             pixelArray[rgbaOffset] = red
                             pixelArray[rgbaOffset + 1] = green
                             pixelArray[rgbaOffset + 2] = blue
                             pixelArray[rgbaOffset + 3] = alpha
                         } else {
-                            print( "unknown endianness")
+                            print("Unknown endianness")
                             return
                         }
                         
-
-                    } else if ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat == .pixelFormatRGB565 {
+                    case .pixelFormatRGB565:
                         let pixelData = frameBufferPtr.load(fromByteOffset: pixelOffset, as: UInt16.self)
-                        
                         let red = UInt8(((pixelData >> 11) & 0x1F) * 255 / 31)
                         let green = UInt8(((pixelData >> 5) & 0x3F) * 255 / 63)
                         let blue = UInt8((pixelData & 0x1F) * 255 / 31)
                         let alpha: UInt8 = 255
-
+                        
                         pixelArray[rgbaOffset] = blue
                         pixelArray[rgbaOffset + 1] = green
                         pixelArray[rgbaOffset + 2] = red
                         pixelArray[rgbaOffset + 3] = alpha
+                    default:
+                        return
                     }
                 }
             }
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = pixelArray
         }
     }
-    */
+      */
+
     public var libretroAudioSampleCallback: @convention(c) (Int16, Int16) -> Void {
         return {left,right  in
             print("libretro_set_audio_sample_callback left channel: \(left) right: \(right)")
@@ -316,18 +316,8 @@ extension ArcadiaCoreProtocol {
                 ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] = 0
                 return Int16(1)
             }
-            
             return Int16(0)
             
-            /*
-            if !ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.isEmpty {
-                if ArcadiaCoreEmulationState.sharedInstance.buttonsPressed[0] == Int(id) {
-                    ArcadiaCoreEmulationState.sharedInstance.buttonsPressed.removeFirst()
-                    return Int16(1)
-                }
-            }
-            return Int16(0)
-            */
         }
     }
     
