@@ -7,10 +7,10 @@
 
 import Foundation
 
-public struct ArcadiaCoreOption {
-    let key: String
-    let description: String
-    let values: [String]
+public struct ArcadiaCoreOption: Hashable {
+    public let key: String
+    public let description: String
+    public let values: [String]
     
     init(key: String, description: String, values: [String]) {
         self.key = key

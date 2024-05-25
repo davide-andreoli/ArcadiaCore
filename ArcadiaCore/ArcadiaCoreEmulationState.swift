@@ -18,6 +18,7 @@ import QuartzCore
     public var audioVideoInfo: ArcadiaAudioVideoInfo? = nil
     public var mainBuffer = [UInt8]()
     public var mainBufferPixelFormat: ArcadiaCorePixelType = .pixelFormatXRGB8888
+    public var showOverlay: Bool = false
     public var currentFrame : CGImage? {
         get {
             return createCGImage(pixels: mainBuffer, width: audioVideoInfo?.geometry.width ?? 0, height: audioVideoInfo?.geometry.height ?? 0)
@@ -138,7 +139,7 @@ import QuartzCore
     public func startEmulation(gameURL: URL) {
         if self.currentGameURL != nil {
             if self.currentGameURL == gameURL {
-                self.currentCore?.resumeGame()
+                self.resumeEmulation()
             } else {
                 self.stopGameLoop()
                 self.currentCore?.unloadGame()
@@ -168,7 +169,11 @@ import QuartzCore
     }
     
     public func pauseEmulation () {
-        self.currentCore?.pauseGame()
+        self.paused = true
+    }
+    
+    public func resumeEmulation () {
+        self.paused = false
     }
     
     public func pressButton(button: ArcadiaCoreButton, device: UInt32 = 0) {
