@@ -73,7 +73,7 @@ public enum ArcadiaCoreButton: Int16, CaseIterable, Identifiable {
     public var mappingExplanation: String {
         switch self {
         case .joypadB:
-            return "b.circle.fill"
+            return "B"
         case .joypadY:
             return "y.circle.fill"
         case .joypadSelect:
@@ -112,39 +112,39 @@ public enum ArcadiaCoreButton: Int16, CaseIterable, Identifiable {
     public var buttonName: String {
         switch self {
         case .joypadB:
-            return "b.circle.fill"
+            return "B"
         case .joypadY:
-            return "y.circle.fill"
+            return "Y"
         case .joypadSelect:
-            return "minus.circle.fill"
+            return "Select"
         case .joypadStart:
-            return "plus.circle.fill"
+            return "Start"
         case .joypadUp:
-            return "arrowtriangle.up.circle.fill"
+            return "Arrow Up"
         case .joypadDown:
-            return "arrowtriangle.down.circle.fill"
+            return "Arrow Down"
         case .joypadLeft:
-            return "arrowtriangle.left.circle.fill"
+            return "Arrow Left"
         case .joypadRight:
-            return "arrowtriangle.right.circle.fill"
+            return "Arrow Right"
         case .joypadA:
-            return "a.circle.fill"
+            return "A"
         case .joypadX:
-            return "x.circle.fill"
+            return "X"
         case .joypadL:
-            return "l.rectangle.roundedbottom.fill"
+            return "Left Shoulder"
         case .joypadR:
-            return "r.rectangle.roundedbottom.fill"
+            return "Right Shoulder"
         case .joypadL2:
-            return "l2.rectangle.roundedtop.fill"
+            return "Left Shoulder Two"
         case .joypadR2:
-            return "r2.rectangle.roundedtop.fill"
+            return "Right Shoulder Two"
         case .joypadL3:
-            return "zl.rectangle.roundedtop.fill"
+            return "Left Shoulder Three"
         case .joypadR3:
-            return "zr.rectangle.roundedtop.fill"
+            return "Right Shoulder Three"
         case .arcadiaButton:
-            return "line.3.horizontal.circle.fill"
+            return "Arcadia Button"
         }
     }
 }
