@@ -17,18 +17,13 @@ public protocol ArcadiaVariableProtocol {
 public protocol ArcadiaCoreProtocol {
     
     associatedtype ArcadiaCoreType: ArcadiaCoreProtocol
-    associatedtype ArcadiaGameInfo: ArcadiaGameInfoProtocol
-    associatedtype ArcadiaAudioVideoInfoType: ArcadiaAudioVideoInfoProtocol
-    associatedtype ArcadiaGameGeometryType: ArcadiaGameGeometryProtocol
-    associatedtype ArcadiaSystemTimingType: ArcadiaSystemTimingProtocol
-    associatedtype ArcadiaVariableType: ArcadiaVariableProtocol
         
     var paused: Bool {get set}
     var initialized: Bool {get set}
     var loadedGame: URL? {get set}
     var initialSaveRamSnapshot: [UInt8]? {get set}
     
-    var audioVideoInfo: ArcadiaAudioVideoInfoType {get set}
+    var audioVideoInfo: retro_system_av_info {get set}
     
     // Libretro Callbacks
     var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {get}
@@ -40,23 +35,23 @@ public protocol ArcadiaCoreProtocol {
     
     // Libretro API Interfaces - To be implemented by the core
     func retroInit()
-    func retroGetSystemAVInfo(info: UnsafeMutablePointer<ArcadiaAudioVideoInfoType>!)
+    func retroGetSystemAVInfo(info: UnsafeMutablePointer<retro_system_av_info>!)
     func retroDeinit()
     func retroRun()
     func retroReset()
-    func retroLoadGame(gameInfo: ArcadiaGameInfo)
+    func retroLoadGame(gameInfo: retro_game_info)
     func retroUnloadGame()
     func retroSerializeSize() -> Int
     func retroSerialize(data: UnsafeMutableRawPointer!, size: Int)
     func retroUnserialize(data: UnsafeRawPointer!, size: Int)
     func retroGetMemorySize(memoryDataId: UInt32) -> Int
     func retroGetMemoryData(memoryDataId: UInt32) -> UnsafeMutableRawPointer!
-    func retroSetEnvironment(environmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool)
-    func retroSetVideoRefresh(videoRefreshCallback: @convention(c) (UnsafeRawPointer?, UInt32, UInt32, Int) -> Void)
-    func retroSetAudioSample(audioSampleCallback: @convention(c) (Int16, Int16) -> Void)
-    func retroSetAudioSampleBatch(audioSampleBatchCallback: @convention(c) (UnsafePointer<Int16>?, Int) -> Int)
-    func retroSetInputPoll(inputPollCallback: @convention(c) () -> Void)
-    func retroSetInputState(inputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16)
+    func retroSetEnvironment(environmentCallback: retro_environment_t)
+    func retroSetVideoRefresh(videoRefreshCallback: retro_video_refresh_t)
+    func retroSetAudioSample(audioSampleCallback: retro_audio_sample_t)
+    func retroSetAudioSampleBatch(audioSampleBatchCallback: retro_audio_sample_batch_t)
+    func retroSetInputPoll(inputPollCallback: retro_input_poll_t)
+    func retroSetInputState(inputStateCallback: retro_input_state_t)
     
     // Frontend/Complex interfaces
     func setInputOutputCallbacks()
@@ -336,10 +331,9 @@ extension ArcadiaCoreProtocol {
     }
     
     mutating public func getSystemAVInfo() {
-        var avInfo = ArcadiaAudioVideoInfoType(geometry: ArcadiaGameGeometryType(base_width: 0, base_height: 0, max_width: 0, max_height: 0, aspect_ratio: 0.0) as! Self.ArcadiaAudioVideoInfoType.ArcadiaGeometryType,
-                                              timing: ArcadiaSystemTimingType(fps: 0.0, sample_rate: 0.0) as! Self.ArcadiaAudioVideoInfoType.ArcadiaTimingType)
+        var avInfo = retro_system_av_info(geometry: retro_game_geometry(base_width: 0, base_height: 0, max_width: 0, max_height: 0, aspect_ratio: 0.0), timing: retro_system_timing(fps: 0.0, sample_rate: 0.0))
         retroGetSystemAVInfo(info: &avInfo)
-        ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo = ArcadiaAudioVideoInfo(avInfo: avInfo)
+        ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo = avInfo
         self.audioVideoInfo = avInfo
     }
     
@@ -387,7 +381,7 @@ extension ArcadiaCoreProtocol {
         
         gameURL.stopAccessingSecurityScopedResource()
         
-        var rom_info = ArcadiaGameInfo(path: romNameCptr, data: data, size: romFile!.count, meta: nil)
+        var rom_info = retro_game_info(path: romNameCptr, data: data, size: romFile!.count, meta: nil)
         retroLoadGame(gameInfo: rom_info)
         
     }
@@ -517,7 +511,6 @@ extension ArcadiaCoreProtocol {
     }
 }
 
-
 public func createCGImageFromXRGB8888(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
     
     let numBytes = pixels.count
@@ -547,4 +540,6 @@ public func createCGImageFromXRGB8888(pixels: [UInt8], width: Int, height: Int) 
         shouldInterpolate: true,
         intent: CGColorRenderingIntent.defaultIntent)
 }
+
+
 

@@ -15,13 +15,13 @@ import QuartzCore
     
     public static var sharedInstance = ArcadiaCoreEmulationState()
     
-    public var audioVideoInfo: ArcadiaAudioVideoInfo? = nil
+    public var audioVideoInfo: retro_system_av_info? = nil
     public var mainBuffer = [UInt8]()
     public var mainBufferPixelFormat: ArcadiaCorePixelType = .pixelFormatXRGB8888
     public var showOverlay: Bool = false
     public var currentFrame : CGImage? {
         get {
-            return createCGImage(pixels: mainBuffer, width: audioVideoInfo?.geometry.width ?? 0, height: audioVideoInfo?.geometry.height ?? 0)
+            return createCGImage(pixels: mainBuffer, width: Int(audioVideoInfo?.geometry.base_width ?? 0), height: Int(audioVideoInfo?.geometry.base_height ?? 0))
         }
         set (newValue) {
             // Just for binding
@@ -58,7 +58,7 @@ import QuartzCore
     }
             
     public func startGameLoop() {
-        let gameLoopQueue = DispatchQueue(label: "com.Arcadia.gameLoop", attributes: .concurrent)
+        let gameLoopQueue = DispatchQueue(label: "com.Arcadia.gameLoop")
         if gameLoopTimer == nil {
             gameLoopTimer = DispatchSource.makeTimerSource(queue: gameLoopQueue)
             gameLoopTimer?.schedule(deadline: .now(), repeating: 1.0 / 60.0)
