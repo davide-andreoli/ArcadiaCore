@@ -12,6 +12,5 @@ public protocol ArcadiaGameTypeProtocol {
     var allowedExtensions: [UTType] {get}
     var associatedCore: any ArcadiaCoreProtocol {get}
     var saveFileExtension: String  {get}
-    var id: Self {get}
     
 }

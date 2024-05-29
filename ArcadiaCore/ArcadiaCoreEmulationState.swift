@@ -49,6 +49,8 @@ import QuartzCore
     
     public func attachCore(core: any ArcadiaCoreProtocol) {
         if self.currentCore == nil {
+            self.currentCore = core
+        } else {
             if type(of: self.currentCore) == type(of: core) {
                 return
             } else {

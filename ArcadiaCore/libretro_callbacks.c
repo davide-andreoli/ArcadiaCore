@@ -7,13 +7,13 @@
 
 #include "libretro_callbacks.h"
 #include <stdlib.h>
+#include <stdio.h>
 
 uint8_t* libretro_video_refresh_callback(const void *frame_buffer_data, uint32_t width, uint32_t height, int pitch, enum retro_pixel_format pixel_format) {
     if (frame_buffer_data == NULL) {
         printf("frame_buffer_data was null\n");
         return NULL;
     }
-
     
     int bytesPerPixel;
     
@@ -47,7 +47,6 @@ uint8_t* libretro_video_refresh_callback(const void *frame_buffer_data, uint32_t
                 uint8_t green = *((uint8_t *)(frame_buffer_data + pixelOffset + 1));
                 uint8_t red = *((uint8_t *)(frame_buffer_data + pixelOffset + 2));
                 uint8_t alpha = *((uint8_t *)(frame_buffer_data + pixelOffset + 3));
-
                 if (endianness == __ORDER_LITTLE_ENDIAN__) {
                     pixelArray[rgbaOffset] = blue;
                     pixelArray[rgbaOffset + 1] = green;
@@ -79,7 +78,6 @@ uint8_t* libretro_video_refresh_callback(const void *frame_buffer_data, uint32_t
             }
         }
     }
-
     return pixelArray;
 }
 

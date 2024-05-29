@@ -342,6 +342,7 @@ extension ArcadiaCoreProtocol {
             retroSetEnvironment(environmentCallback: libretroEnvironmentCallback)
             retroInit()
             getSystemAVInfo()
+            print(self.audioVideoInfo)
             initialized = true
         }
     }
@@ -356,34 +357,23 @@ extension ArcadiaCoreProtocol {
     mutating public func loadGame(gameURL: URL) {
         self.loadedGame = gameURL
         ArcadiaCoreEmulationState.sharedInstance.currentGameURL = gameURL
-        var filepath = gameURL.absoluteString
-        gameURL.startAccessingSecurityScopedResource()
-        var location = filepath.cString(using: String.Encoding.utf8)!
+        let filepath = gameURL.path
 
-        
-        let romNameCstr = (filepath as NSString).utf8String
-        let romNameCptr = UnsafePointer<CChar>(romNameCstr)
-        
-        var data: UnsafeRawPointer? = nil
-        var romFile: Data? = nil
-        
-        let contents = FileManager.default.contents(atPath: filepath)
-        do {
-            romFile = try Data(contentsOf: gameURL)
-            guard let romFile = romFile else {
-                fatalError("Failed to read file")
-            }
-            data = romFile.withUnsafeBytes({ $0.baseAddress })
+        guard let romNameCstr = strdup(filepath) else {
+            fatalError("Failed to duplicate filepath")
         }
-        catch {
+        defer {
+            free(romNameCstr)
+        }
+        let romNameCptr = UnsafePointer<CChar>(romNameCstr)
+
+        guard let romFile = try? Data(contentsOf: gameURL) else {
             fatalError("Failed to read file")
         }
-        
-        gameURL.stopAccessingSecurityScopedResource()
-        
-        var rom_info = retro_game_info(path: romNameCptr, data: data, size: romFile!.count, meta: nil)
+        let data = romFile.withUnsafeBytes { $0.baseAddress }
+
+        var rom_info = retro_game_info(path: romNameCptr, data: data, size: romFile.count, meta: nil)
         retroLoadGame(gameInfo: rom_info)
-        
     }
     
     mutating public func unloadGame() {
