@@ -306,8 +306,9 @@ extension ArcadiaCoreProtocol {
     
     public var libretroInputStateCallback: @convention(c) (UInt32, UInt32, UInt32, UInt32) -> Int16 {
         return {port,device,index,id in
-            //print("polling port: \(port), dev: \(device), index: \(index), id: \(id)")
+            
             if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] == 1 {
+                //print("Got port: \(port), dev: \(device), index: \(index), id: \(id)")
                 ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] = 0
                 return Int16(1)
             }
