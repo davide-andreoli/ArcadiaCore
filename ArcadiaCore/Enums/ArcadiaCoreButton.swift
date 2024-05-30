@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum ArcadiaCoreButton: Int16, CaseIterable, Identifiable {
+public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
     
     public var id: Self {
         return self

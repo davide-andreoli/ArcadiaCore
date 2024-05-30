@@ -9,6 +9,31 @@ import Foundation
 import CoreGraphics
 import QuartzCore
 
+public struct ArcadiaCoreButtonPressAction: Identifiable {
+    
+    let port: UInt32
+    let device: UInt32
+    let index: UInt32
+    let buttonIndex: UInt32
+    let action: () -> Void
+    
+    public var id: String {
+        return "\(port)-\(device)-\(index)-\(buttonIndex)"
+    }
+    
+    init(port: UInt32, device: UInt32, index: UInt32, buttonIndex: UInt32, action: @escaping () -> Void) {
+        self.port = port
+        self.device = device
+        self.index = index
+        self.buttonIndex = buttonIndex
+        self.action = action
+    }
+    
+
+    
+    //print("Got port: \(port), dev: \(device), index: \(index), id: \(id)")
+}
+
 
 
 @Observable public class ArcadiaCoreEmulationState {
@@ -32,7 +57,7 @@ import QuartzCore
     public var currentCore: (any ArcadiaCoreProtocol)? = nil
     public var currentGameType: (any ArcadiaGameTypeProtocol)? = nil
     
-    public var buttonsPressed : [Int16] = []
+    public var buttonsPressed : [UInt32] = []
     public var pressedButtons: [UInt32 : [UInt32 : [UInt32 : [UInt32 : Int16]]]] = [:]
     public var currentAudioFrame = [Int16]()
     public var currentAudioFrameFloat = [Float]()
@@ -44,7 +69,8 @@ import QuartzCore
     
     public var mainGameLoop : Timer? = nil
     public var checkSaveLoop: DispatchSourceTimer? = nil
-    private var gameLoopTimer: DispatchSourceTimer? = nil
+    public var gameLoopTimer: DispatchSourceTimer? = nil
+    public var actions: [ArcadiaCoreButtonPressAction] = []
     public var paused = false
     
     public func attachCore(core: any ArcadiaCoreProtocol) {
@@ -58,6 +84,8 @@ import QuartzCore
             }
         }
     }
+    
+
             
     public func startGameLoop() {
         let gameLoopQueue = DispatchQueue(label: "com.Arcadia.gameLoop")
@@ -65,13 +93,32 @@ import QuartzCore
             gameLoopTimer = DispatchSource.makeTimerSource(queue: gameLoopQueue)
             gameLoopTimer?.schedule(deadline: .now(), repeating: 1.0 / 60.0)
             gameLoopTimer?.setEventHandler { [weak self] in
-                self?.gameLoop()
+                self?.timerFired()
             }
             gameLoopTimer?.resume()
             startSaveRamMonitoring()
             paused = false
         }
     }
+    
+    public func addAction(port: UInt32, device: UInt32, index: UInt32, buttonIndex: UInt32) {
+        let action = ArcadiaCoreButtonPressAction(port: port, device: device, index: index, buttonIndex: buttonIndex, action: { self.pressButton(port: port, device: device, index: index, button: buttonIndex) })
+        actions.append(action)
+    }
+
+    public func removeAction(port: UInt32, device: UInt32, index: UInt32, buttonIndex: UInt32) {
+        let action = ArcadiaCoreButtonPressAction(port: port, device: device, index: index, buttonIndex: buttonIndex, action: { self.pressButton(port: port, device: device, index: index, button: buttonIndex) })
+        actions.removeAll(where: { element in
+            element.id == action.id
+        })
+    }
+    
+    private func timerFired() {
+            for action in actions {
+                action.action()
+            }
+            self.gameLoop()
+        }
     
     public func stopGameLoop() {
         gameLoopTimer?.cancel()
@@ -184,6 +231,10 @@ import QuartzCore
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
         self.pressedButtons[port]?[device]?[index]?[UInt32(id.rawValue)] = 1
+    }
+    
+    public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
+        self.pressedButtons[port]?[device]?[index]?[id] = 1
     }
     
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
