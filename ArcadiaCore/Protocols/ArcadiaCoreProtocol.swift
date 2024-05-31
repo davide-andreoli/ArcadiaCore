@@ -79,7 +79,7 @@ extension ArcadiaCoreProtocol {
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
             if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-               // print(arcadiaCommand)
+                print(arcadiaCommand)
             } else {
                 print("Unknown \(command)")
             }
@@ -373,7 +373,7 @@ extension ArcadiaCoreProtocol {
         }
         let data = romFile.withUnsafeBytes { $0.baseAddress }
 
-        var rom_info = retro_game_info(path: romNameCptr, data: data, size: romFile.count, meta: nil)
+        let rom_info = retro_game_info(path: romNameCptr, data: data, size: romFile.count, meta: nil)
         retroLoadGame(gameInfo: rom_info)
     }
     
@@ -405,7 +405,7 @@ extension ArcadiaCoreProtocol {
     
     public func loadState(saveFileURL: URL) {
         do {
-            var saveFileContent = try Data(contentsOf: saveFileURL)
+            let saveFileContent = try Data(contentsOf: saveFileURL)
             saveFileContent.withUnsafeBytes { pointer in
                 if let baseAddress = pointer.baseAddress {
                     retroUnserialize(data: baseAddress, size: saveFileContent.count)
