@@ -9,30 +9,7 @@ import Foundation
 import CoreGraphics
 import QuartzCore
 
-public struct ArcadiaCoreButtonPressAction: Identifiable {
-    
-    let port: UInt32
-    let device: UInt32
-    let index: UInt32
-    let buttonIndex: UInt32
-    let action: () -> Void
-    
-    public var id: String {
-        return "\(port)-\(device)-\(index)-\(buttonIndex)"
-    }
-    
-    init(port: UInt32, device: UInt32, index: UInt32, buttonIndex: UInt32, action: @escaping () -> Void) {
-        self.port = port
-        self.device = device
-        self.index = index
-        self.buttonIndex = buttonIndex
-        self.action = action
-    }
-    
 
-    
-    //print("Got port: \(port), dev: \(device), index: \(index), id: \(id)")
-}
 
 
 
@@ -70,7 +47,6 @@ public struct ArcadiaCoreButtonPressAction: Identifiable {
     public var mainGameLoop : Timer? = nil
     public var checkSaveLoop: DispatchSourceTimer? = nil
     public var gameLoopTimer: DispatchSourceTimer? = nil
-    public var actions: [ArcadiaCoreButtonPressAction] = []
     public var paused = false
     
     public func attachCore(core: any ArcadiaCoreProtocol) {
@@ -93,7 +69,7 @@ public struct ArcadiaCoreButtonPressAction: Identifiable {
             gameLoopTimer = DispatchSource.makeTimerSource(queue: gameLoopQueue)
             gameLoopTimer?.schedule(deadline: .now(), repeating: 1.0 / 60.0)
             gameLoopTimer?.setEventHandler { [weak self] in
-                self?.timerFired()
+                self?.gameLoop()
             }
             gameLoopTimer?.resume()
             startSaveRamMonitoring()
@@ -101,24 +77,6 @@ public struct ArcadiaCoreButtonPressAction: Identifiable {
         }
     }
     
-    public func addAction(port: UInt32, device: UInt32, index: UInt32, buttonIndex: UInt32) {
-        let action = ArcadiaCoreButtonPressAction(port: port, device: device, index: index, buttonIndex: buttonIndex, action: { self.pressButton(port: port, device: device, index: index, button: buttonIndex) })
-        actions.append(action)
-    }
-
-    public func removeAction(port: UInt32, device: UInt32, index: UInt32, buttonIndex: UInt32) {
-        let action = ArcadiaCoreButtonPressAction(port: port, device: device, index: index, buttonIndex: buttonIndex, action: { self.pressButton(port: port, device: device, index: index, button: buttonIndex) })
-        actions.removeAll(where: { element in
-            element.id == action.id
-        })
-    }
-    
-    private func timerFired() {
-            for action in actions {
-                action.action()
-            }
-            self.gameLoop()
-        }
     
     public func stopGameLoop() {
         gameLoopTimer?.cancel()
@@ -235,6 +193,10 @@ public struct ArcadiaCoreButtonPressAction: Identifiable {
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
         self.pressedButtons[port]?[device]?[index]?[id] = 1
+    }
+    
+    public func unpressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
+        self.pressedButtons[port]?[device]?[index]?[id] = 0
     }
     
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {

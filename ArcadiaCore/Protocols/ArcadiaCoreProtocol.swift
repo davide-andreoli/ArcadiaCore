@@ -309,7 +309,7 @@ extension ArcadiaCoreProtocol {
             //print("Polling port: \(port), dev: \(device), index: \(index), id: \(id)")
             if ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] == 1 {
                 //print("Got port: \(port), dev: \(device), index: \(index), id: \(id)")
-                ArcadiaCoreEmulationState.sharedInstance.pressedButtons[port]?[device]?[index]?[id] = 0
+                
                 return Int16(1)
             }
             return Int16(0)
