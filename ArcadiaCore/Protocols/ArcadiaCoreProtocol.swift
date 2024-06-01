@@ -21,7 +21,7 @@ public protocol ArcadiaCoreProtocol {
     var paused: Bool {get set}
     var initialized: Bool {get set}
     var loadedGame: URL? {get set}
-    var initialSaveRamSnapshot: [UInt8]? {get set}
+    var currentSaveRamSnapshot: [UInt32 : [UInt8]]? {get set}
     
     var audioVideoInfo: retro_system_av_info {get set}
     
@@ -79,7 +79,7 @@ extension ArcadiaCoreProtocol {
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
             if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-                print(arcadiaCommand)
+                //print(arcadiaCommand)
             } else {
                 print("Unknown \(command)")
             }
@@ -416,7 +416,7 @@ extension ArcadiaCoreProtocol {
             print("Error writing save state: \(error)")
         }
     }
-    
+        
     public func saveMemoryData(memoryId: UInt32, saveFileURL: URL) {
         print("Saving memory data")
         let saveSize = retroGetMemorySize(memoryDataId: memoryId)
@@ -450,19 +450,19 @@ extension ArcadiaCoreProtocol {
         
         if saveRamSize > 0 {
             let initialSaveRam = saveRamPointer.assumingMemoryBound(to: UInt8.self)
-            self.initialSaveRamSnapshot = Array(UnsafeBufferPointer(start: initialSaveRam, count: saveRamSize))
+            self.currentSaveRamSnapshot?[memoryDataId] = Array(UnsafeBufferPointer(start: initialSaveRam, count: saveRamSize))
         }
     }
     
     mutating public func checkForSaveRamModification(memoryDataId: UInt32) -> Bool {
         guard let currentSaveRamPointer = retroGetMemoryData(memoryDataId: memoryDataId)?.assumingMemoryBound(to: UInt8.self),
-              let saveRamSnapshot = self.initialSaveRamSnapshot else { return false }
+              let saveRamSnapshot = self.currentSaveRamSnapshot?[memoryDataId] else { return false }
         let saveRamSize = retroGetMemorySize(memoryDataId: memoryDataId)
         let currentSaveRam = Array(UnsafeBufferPointer(start: currentSaveRamPointer, count: saveRamSize))
         
         if currentSaveRam != saveRamSnapshot {
             // Update the snapshot with the current state
-            self.initialSaveRamSnapshot = currentSaveRam
+            self.currentSaveRamSnapshot?[memoryDataId] = currentSaveRam
             return true // Save RAM has been modified
         }
         return false // No changes detected
@@ -483,7 +483,8 @@ extension ArcadiaCoreProtocol {
                 return
             }
             data.copyBytes(to: saveRamPointer, count: saveRamSize)
-            self.initialSaveRamSnapshot = [UInt8](data)
+            self.currentSaveRamSnapshot?[memoryDataId] = [UInt8](data)
+            
         } catch {
             print("Failed to load battery save: \(error)")
         }

@@ -12,5 +12,6 @@ public protocol ArcadiaGameTypeProtocol {
     var allowedExtensions: [UTType] {get}
     var associatedCore: any ArcadiaCoreProtocol {get}
     var saveFileExtension: String  {get}
+    var supportedSaveFiles: [ArcadiaCoreMemoryType : String] {get}
     
 }

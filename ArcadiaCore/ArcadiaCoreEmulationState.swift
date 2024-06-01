@@ -41,6 +41,7 @@ import QuartzCore
     public var currentGameURL: URL? = nil
 
     public var currentSaveFolder: URL? = nil
+    public var currentSaveFileURL: [ArcadiaCoreMemoryType: URL] = [:]
     
     public var currentCoreOptions: [ArcadiaCoreOption] = []
     
@@ -123,15 +124,16 @@ import QuartzCore
         self.checkSaveLoop?.setEventHandler { [weak self] in
             guard let self = self else { return }
             if !paused {
-            guard let checkResult = self.currentCore?.checkForSaveRamModification(memoryDataId: 0) else {
-                return
-            }
-            
-                if checkResult {
-                    print("Save File modified")
-                    self.currentCore?.saveMemoryData(memoryId: 0, saveFileURL: ArcadiaCoreEmulationState.sharedInstance.currentSaveFolder!)
+                for memoryType in currentGameType!.supportedSaveFiles.keys {
+                    guard let checkResult = self.currentCore?.checkForSaveRamModification(memoryDataId: memoryType.rawValue) else {
+                        return
+                    }
+                        if checkResult {
+                            self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (ArcadiaCoreEmulationState.sharedInstance.currentSaveFileURL[memoryType])!)
+                        }
+                    
+                    }
                 }
-            }
         }
         self.checkSaveLoop?.resume()
     }
@@ -154,11 +156,16 @@ import QuartzCore
                 self.currentCore?.deinitializeCore()
                 self.currentCore?.initializeCore()
                 self.currentCore?.loadGame(gameURL: gameURL)
-                if FileManager.default.fileExists(atPath: self.currentSaveFolder?.path ?? "") {
-                    self.currentCore?.loadBatterySave(from: self.currentSaveFolder!, memoryDataId: 0)
-                } else {
-                    self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: 0)
-                }
+                for memoryType in currentGameType!.supportedSaveFiles.keys {
+                    if FileManager.default.fileExists(atPath: self.currentSaveFileURL[memoryType]?.path ?? "") {
+                        self.currentCore?.loadBatterySave(from: self.currentSaveFileURL[memoryType]!, memoryDataId: memoryType.rawValue)
+                    }
+                    else {
+                        self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (ArcadiaCoreEmulationState.sharedInstance.currentSaveFileURL[memoryType])!)
+                        self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: memoryType.rawValue)
+                    }
+                    
+                    }
                 self.currentCore?.setInputOutputCallbacks()
                 self.startGameLoop()
             }
