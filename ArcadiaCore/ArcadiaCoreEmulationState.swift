@@ -161,7 +161,7 @@ import QuartzCore
                         self.currentCore?.loadBatterySave(from: self.currentSaveFileURL[memoryType]!, memoryDataId: memoryType.rawValue)
                     }
                     else {
-                        self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (ArcadiaCoreEmulationState.sharedInstance.currentSaveFileURL[memoryType])!)
+                        self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (self.currentSaveFileURL[memoryType])!)
                         self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: memoryType.rawValue)
                     }
                     
@@ -172,11 +172,17 @@ import QuartzCore
         } else {
             self.currentCore?.initializeCore()
             self.currentCore?.loadGame(gameURL: gameURL)
-            if FileManager.default.fileExists(atPath: self.currentSaveFolder?.path ?? "") {
-                self.currentCore?.loadBatterySave(from: self.currentSaveFolder!, memoryDataId: 0)
-            } else {
-                self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: 0)
-            }
+            for memoryType in currentGameType!.supportedSaveFiles.keys {
+                if FileManager.default.fileExists(atPath: self.currentSaveFileURL[memoryType]?.path ?? "") {
+                    print("Found file in \(self.currentSaveFileURL[memoryType]!.path)")
+                    self.currentCore?.loadBatterySave(from: self.currentSaveFileURL[memoryType]!, memoryDataId: memoryType.rawValue)
+                }
+                else {
+                    self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (self.currentSaveFileURL[memoryType])!)
+                    self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: memoryType.rawValue)
+                }
+                
+                }
             self.currentCore?.setInputOutputCallbacks()
             self.startGameLoop()
         }
