@@ -212,6 +212,10 @@ import QuartzCore
         self.pressedButtons[port]?[device]?[index]?[id] = 0
     }
     
+    public func unpressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
+        self.pressedButtons[port]?[device]?[index]?[UInt32(id.rawValue)] = 0
+    }
+    
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
         
         if width == 0 {
