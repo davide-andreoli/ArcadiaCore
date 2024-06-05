@@ -42,6 +42,7 @@ import QuartzCore
 
     public var currentSaveFolder: URL? = nil
     public var currentSaveFileURL: [ArcadiaCoreMemoryType: URL] = [:]
+    public var currentStateURL: URL? = nil
     
     public var currentCoreOptions: [ArcadiaCoreOption] = []
     
