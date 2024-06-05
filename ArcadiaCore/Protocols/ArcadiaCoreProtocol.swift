@@ -291,9 +291,8 @@ extension ArcadiaCoreProtocol {
             
             let audioBufferFloat = UnsafeBufferPointer(start: pointer, count: frames * 2)
             let audioSliceFloat = Array(audioBufferFloat)
-            //TODO: Remove Int16 data
-            ArcadiaCoreEmulationState.sharedInstance.currentAudioFrame = audioSlice
-            ArcadiaCoreEmulationState.sharedInstance.currentAudioFrameFloat = audioSliceFloat
+            ArcadiaCoreEmulationState.sharedInstance.audioPlayer.updateBuffer(with: audioSliceFloat)
+            //ArcadiaCoreEmulationState.sharedInstance.currentAudioFrameFloat = audioSliceFloat
             return frames
         }
     }
@@ -379,7 +378,6 @@ extension ArcadiaCoreProtocol {
     
     mutating public func unloadGame() {
         ArcadiaCoreEmulationState.sharedInstance.currentGameURL = nil
-        //TODO: empty the button pressed array
         retroUnloadGame()
     }
     

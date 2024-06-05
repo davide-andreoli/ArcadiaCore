@@ -16,6 +16,7 @@ import QuartzCore
 @Observable public class ArcadiaCoreEmulationState {
     
     public static var sharedInstance = ArcadiaCoreEmulationState()
+    public var audioPlayer = ArcadiaCoreAudioPlayer()
     
     public var audioVideoInfo: retro_system_av_info? = nil
     public var mainBuffer = [UInt8]()
@@ -30,17 +31,13 @@ import QuartzCore
         }
     }
     
-    //TODO: the current core propery might be not useful now that the currentGameType can return the core
     public var currentCore: (any ArcadiaCoreProtocol)? = nil
     public var currentGameType: (any ArcadiaGameTypeProtocol)? = nil
     
-    public var buttonsPressed : [UInt32] = []
     public var pressedButtons: [UInt32 : [UInt32 : [UInt32 : [UInt32 : Int16]]]] = [:]
-    public var currentAudioFrame = [Int16]()
     public var currentAudioFrameFloat = [Float]()
     public var currentGameURL: URL? = nil
 
-    public var currentSaveFolder: URL? = nil
     public var currentSaveFileURL: [ArcadiaCoreMemoryType: URL] = [:]
     public var currentStateURL: URL? = nil
     
@@ -169,6 +166,7 @@ import QuartzCore
                     }
                 self.currentCore?.setInputOutputCallbacks()
                 self.startGameLoop()
+                self.audioPlayer.start()
             }
         } else {
             self.currentCore?.initializeCore()
@@ -186,6 +184,7 @@ import QuartzCore
                 }
             self.currentCore?.setInputOutputCallbacks()
             self.startGameLoop()
+            self.audioPlayer.start()
         }
     }
     
@@ -195,10 +194,6 @@ import QuartzCore
     
     public func resumeEmulation () {
         self.paused = false
-    }
-    
-    public func pressButton(button: ArcadiaCoreButton, device: UInt32 = 0) {
-        buttonsPressed.append(button.rawValue)
     }
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {

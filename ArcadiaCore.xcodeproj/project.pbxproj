@@ -32,6 +32,7 @@
 		956F84202BF3BF420025FC5F /* ArcadiaCorePixelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F841F2BF3BF420025FC5F /* ArcadiaCorePixelType.swift */; };
 		956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */; };
 		956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */; };
+		959F3BA92C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -490,6 +491,7 @@
 		956F841F2BF3BF420025FC5F /* ArcadiaCorePixelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCorePixelType.swift; sourceTree = "<group>"; };
 		956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreButton.swift; sourceTree = "<group>"; };
 		956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaAudioVideoInfo.swift; sourceTree = "<group>"; };
+		959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreAudioPlayer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -561,6 +563,7 @@
 				956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */,
 				955CC3A32BFC691100C930ED /* libretro_callbacks.h */,
 				955CC3A42BFC691100C930ED /* libretro_callbacks.c */,
+				959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */,
 			);
 			path = ArcadiaCore;
 			sourceTree = "<group>";
@@ -2118,6 +2121,7 @@
 				956F841B2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift in Sources */,
 				956F841D2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift in Sources */,
 				955CC3862BF7F61600C930ED /* ArcadiaCoreMemoryType.swift in Sources */,
+				959F3BA92C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift in Sources */,
 				955CC3802BF7E4C900C930ED /* ArcadiaCallbackType.swift in Sources */,
 				956F84192BF3BECE0025FC5F /* ArcadiaSystemTimingProtocol.swift in Sources */,
 				956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */,
