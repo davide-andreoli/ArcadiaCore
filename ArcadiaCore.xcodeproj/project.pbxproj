@@ -557,16 +557,14 @@
 		95456B912BE2AC0900113B8A /* ArcadiaCore */ = {
 			isa = PBXGroup;
 			children = (
+				959F3BAE2C118EE0009EF53B /* Classes */,
 				956F84232BF3BFAA0025FC5F /* Models */,
 				956F841E2BF3BF340025FC5F /* Enums */,
 				956F84152BF3BE940025FC5F /* Protocols */,
 				95456B922BE2AC0900113B8A /* ArcadiaCore.h */,
 				95456B932BE2AC0900113B8A /* ArcadiaCore.docc */,
-				956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */,
 				955CC3A32BFC691100C930ED /* libretro_callbacks.h */,
 				955CC3A42BFC691100C930ED /* libretro_callbacks.c */,
-				959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */,
-				959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */,
 			);
 			path = ArcadiaCore;
 			sourceTree = "<group>";
@@ -1938,6 +1936,16 @@
 				955CC37D2BF7E4AC00C930ED /* ArcadiaCoreOption.swift */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		959F3BAE2C118EE0009EF53B /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */,
+				959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */,
+				959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
