@@ -12,6 +12,7 @@ public class ArcadiaCoreAudioPlayer {
     private var audioEngine: AVAudioEngine
     private var playerNode: AVAudioPlayerNode
     private var audioFormat: AVAudioFormat
+    public var sampleRate: Double = 44100
 
     private let bufferUpdateQueue = DispatchQueue(label: "com.Arcadia.bufferUpdateQueue", qos: .userInteractive)
 
@@ -19,7 +20,6 @@ public class ArcadiaCoreAudioPlayer {
         audioEngine = AVAudioEngine()
         playerNode = AVAudioPlayerNode()
 
-        let sampleRate: Double = 44100
         let channels: AVAudioChannelCount = 2 // Two channels for stereo
 
         // Use Float32 format with non-interleaved data
@@ -39,6 +39,19 @@ public class ArcadiaCoreAudioPlayer {
         } catch {
             print("Error starting audio engine: \(error)")
         }
+    }
+    
+    func changeSampleRate(to newSampleRate: Double) {
+        audioEngine.stop()
+        audioEngine.reset()
+        sampleRate = newSampleRate
+        self.audioFormat = AVAudioFormat(standardFormatWithSampleRate: newSampleRate, channels: self.audioFormat.channelCount)!
+        
+        self.audioEngine.detach(playerNode)
+        self.playerNode = AVAudioPlayerNode()
+        self.audioEngine.attach(playerNode)
+        self.audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: audioFormat)
+        
     }
 
     func updateBuffer(with audioData: [Float32]) {

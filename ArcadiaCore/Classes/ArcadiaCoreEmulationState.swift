@@ -178,11 +178,19 @@ import QuartzCore
                 self.prepareCore(gameURL: gameURL, gameType: gameType, stateURL: stateURL, saveFileURLs: saveFileURLs)
                 self.startGameLoop()
                 //TODO: check if current audio player sample rate is ok or it needs to change
+                if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
+                    print("Changing sample rate")
+                    self.audioPlayer.changeSampleRate(to: self.currentCore!.audioVideoInfo.timing.sample_rate)
+                }
                 self.audioPlayer.start()
             }
         } else {
             self.prepareCore(gameURL: gameURL, gameType: gameType, stateURL: stateURL, saveFileURLs: saveFileURLs)
             self.startGameLoop()
+            if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
+                print("Changing sample rate")
+                self.audioPlayer.changeSampleRate(to: self.currentCore!.audioVideoInfo.timing.sample_rate)
+            }
             self.audioPlayer.start()
         }
     }
