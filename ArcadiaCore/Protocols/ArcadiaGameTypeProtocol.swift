@@ -9,9 +9,11 @@ import Foundation
 import UniformTypeIdentifiers
 
 public protocol ArcadiaGameTypeProtocol {
+    var name: String {get}
     var allowedExtensions: [UTType] {get}
     var associatedCore: any ArcadiaCoreProtocol {get}
     var saveFileExtension: String  {get}
     var supportedSaveFiles: [ArcadiaCoreMemoryType : String] {get}
     
 }
+

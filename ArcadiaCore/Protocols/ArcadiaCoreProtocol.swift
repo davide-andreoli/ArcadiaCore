@@ -193,7 +193,7 @@ extension ArcadiaCoreProtocol {
             }
             let length = Int(width * height * 4)
             let bufferPointer = UnsafeBufferPointer(start: pointer, count: length)
-            ArcadiaCoreEmulationState.sharedInstance.mainBuffer = Array(bufferPointer)
+            //ArcadiaCoreEmulationState.sharedInstance.mainBuffer = Array(bufferPointer)
             ArcadiaCoreEmulationState.sharedInstance.metalRendered.updateTexture(with: Array(bufferPointer), width: Int(width), height: Int(height))
             free(pointer)
         }

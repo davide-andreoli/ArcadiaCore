@@ -57,7 +57,7 @@ public class ArcadiaCoreMetalRenderer: NSObject, MTKViewDelegate {
         }
         let region = MTLRegionMake2D(0, 0, width, height)
         texture?.replace(region: region, mipmapLevel: 0, withBytes: pixelData, bytesPerRow: 4 * width)
-        print("Texture updated with size \(width)x\(height)")
+        //print("Texture updated with size \(width)x\(height)")
     }
 
     public func mtkView(_ view: MTKView, drawableSizeWillChange size: CGSize) {
@@ -81,6 +81,6 @@ public class ArcadiaCoreMetalRenderer: NSObject, MTKViewDelegate {
         renderEncoder?.endEncoding()
         commandBuffer?.present(drawable)
         commandBuffer?.commit()
-        print("Drawing frame")
+        //print("Drawing frame")
     }
 }

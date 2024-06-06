@@ -142,13 +142,18 @@ import QuartzCore
         self.checkSaveLoop = nil
     }
     
-    public func prepareCore(gameURL: URL, gameType: ArcadiaGameTypeProtocol, stateURL: URL, saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
-        self.currentGameType = gameType
-        self.attachCore(core: gameType.associatedCore)
+    public func prepareCore(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURL: URL, saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
+        if gameType.name != currentGameType?.name {
+            self.currentCore?.deinitializeCore()
+            self.currentCore = nil
+            self.currentGameType = gameType
+            self.attachCore(core: gameType.associatedCore)
+            self.currentCore?.initializeCore()
+            self.currentCore?.setInputOutputCallbacks()
+        }
         self.currentStateURL = stateURL
         self.currentSaveFileURL = saveFileURLs
         
-        self.currentCore?.initializeCore()
         self.currentCore?.loadGame(gameURL: gameURL)
         for memoryType in gameType.supportedSaveFiles.keys {
             if FileManager.default.fileExists(atPath: self.currentSaveFileURL[memoryType]?.path ?? "") {
@@ -159,19 +164,17 @@ import QuartzCore
                 self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: memoryType.rawValue)
             }
             
-            }
-        self.currentCore?.setInputOutputCallbacks()
+        }
+        
     }
     
-    public func startEmulation(gameURL: URL, gameType: ArcadiaGameTypeProtocol, stateURL: URL, saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
+    public func startEmulation(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURL: URL, saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
         if self.currentGameURL != nil {
             if self.currentGameURL == gameURL {
                 self.resumeEmulation()
             } else {
                 self.stopGameLoop()
                 self.currentCore?.unloadGame()
-                //TODO: Understand if it's really necessary to deinit the core
-                self.currentCore?.deinitializeCore()
                 self.prepareCore(gameURL: gameURL, gameType: gameType, stateURL: stateURL, saveFileURLs: saveFileURLs)
                 self.startGameLoop()
                 //TODO: check if current audio player sample rate is ok or it needs to change
