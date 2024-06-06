@@ -17,6 +17,7 @@ import QuartzCore
     
     public static var sharedInstance = ArcadiaCoreEmulationState()
     public var audioPlayer = ArcadiaCoreAudioPlayer()
+    public var metalRendered = ArcadiaCoreMetalRenderer()
     
     public var audioVideoInfo: retro_system_av_info? = nil
     public var mainBuffer = [UInt8]()

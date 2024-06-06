@@ -33,6 +33,7 @@
 		956F84222BF3BF5C0025FC5F /* ArcadiaCoreButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */; };
 		956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */; };
 		959F3BA92C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */; };
+		959F3BAD2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -492,6 +493,7 @@
 		956F84212BF3BF5C0025FC5F /* ArcadiaCoreButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreButton.swift; sourceTree = "<group>"; };
 		956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaAudioVideoInfo.swift; sourceTree = "<group>"; };
 		959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreAudioPlayer.swift; sourceTree = "<group>"; };
+		959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreMetalRenderer.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -563,6 +565,7 @@
 				956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */,
 				955CC3A32BFC691100C930ED /* libretro_callbacks.h */,
 				955CC3A42BFC691100C930ED /* libretro_callbacks.c */,
+				959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */,
 				959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */,
 			);
 			path = ArcadiaCore;
@@ -2117,6 +2120,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				959F3BAD2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift in Sources */,
 				95456B942BE2AC0900113B8A /* ArcadiaCore.docc in Sources */,
 				956F841B2BF3BEEA0025FC5F /* ArcadiaAudioVideoInfoProtocol.swift in Sources */,
 				956F841D2BF3BF020025FC5F /* ArcadiaGameInfoProtocol.swift in Sources */,
