@@ -79,13 +79,29 @@ extension ArcadiaCoreProtocol {
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
             if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-                //print(arcadiaCommand)
+                print(arcadiaCommand)
             } else {
                 print("Unknown \(command)")
             }
             switch command {
             case 3:
                 data?.storeBytes(of: true, as: Bool.self)
+                return true
+            case 9:
+                //TODO: send the correct folder based on game type?
+                let url = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0].appendingPathComponent("Arcadia")
+                
+                let path = url.path
+                
+                guard let systemDirCString = strdup(path) else {
+                    fatalError("Failed to duplicate filepath")
+                }
+                
+                defer {
+                    free(systemDirCString)
+                }
+
+                data?.storeBytes(of: systemDirCString, as: UnsafeMutablePointer<CChar>.self)
                 return true
             case 10:
                 ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat = ArcadiaCorePixelType(rawValue: data!.load(as: UInt32.self))
@@ -154,7 +170,7 @@ extension ArcadiaCoreProtocol {
                 free(keyCString)
                 free(valueCString)
                 */
-                return true
+                return false
             case 16:
                 // Assuming data contains an array of retro_variable structs
                 // terminated by a { NULL, NULL } element
