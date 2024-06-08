@@ -22,7 +22,6 @@ public protocol ArcadiaCoreProtocol {
     var initialized: Bool {get set}
     var loadedGame: URL? {get set}
     var currentSaveRamSnapshot: [UInt32 : [UInt8]]? {get set}
-    var systemName: String {get}
     
     var audioVideoInfo: retro_system_av_info {get set}
     
@@ -191,32 +190,54 @@ extension ArcadiaCoreProtocol {
                     
                 }
                 return true
+            case 17:
+                // GET_VARIABLE_UPDATE
+                // TODO: search if a variable has been modified and return true if so
+                return false
             case 27:
-                let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>) -> Void = {
-                        level, message in
-                        
-                        let levelString: String
-                        
-                        switch level {
-                        case RETRO_LOG_DEBUG:
-                            levelString = "DEBUG"
-                        case RETRO_LOG_INFO:
-                            levelString = "INFO"
-                        case RETRO_LOG_WARN:
-                            levelString = "WARN"
-                        case RETRO_LOG_ERROR:
-                            levelString = "ERROR"
-                        case RETRO_LOG_DUMMY:
-                            levelString = "DUMMY"
-                        default:
-                            levelString = "DEFAULT"
-                        }
-                        let messageString = String(cString: message)
-                        print("[\(levelString)] \(messageString)")
+                
+                let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>, UnsafeMutableRawPointer?) -> Void = {
+                    level, message, argPointer in
+                
+                    let levelString: String
+                    switch level {
+                    case RETRO_LOG_DEBUG:
+                        levelString = "DEBUG"
+                    case RETRO_LOG_INFO:
+                        levelString = "INFO"
+                    case RETRO_LOG_WARN:
+                        levelString = "WARN"
+                    case RETRO_LOG_ERROR:
+                        levelString = "ERROR"
+                    case RETRO_LOG_DUMMY:
+                        levelString = "DUMMY"
+                    default:
+                        levelString = "DEFAULT"
                     }
+                        
+                        let messageString = String(cString: message)
+                    var formattedString = ""
+                    //TODO: Handle multiple Args by counting the placeholders inside the message
+                    if let args = argPointer {
+                        let argsPointer = args.bindMemory(to: CVarArg.self, capacity: 1)
+                        withVaList([argsPointer]) { vaList in
+                            formattedString = NSString(format: messageString, arguments: vaList) as String
+                        }
+                    }
+                        print("[\(levelString)] \(formattedString)")
+                    
+                }
+                
                 let pointer = unsafeBitCast(libretroLogCallback, to: retro_log_printf_t.self)
                 let callback = retro_log_callback(log: pointer)
                 data?.storeBytes(of: callback, as: retro_log_callback.self)
+                 
+                /*
+                let pointer = unsafeBitCast(libretro_log_callback, to: retro_log_printf_t.self)
+                let callback = retro_log_callback(log: pointer)
+                data?.storeBytes(of: callback, as: retro_log_callback.self)
+                 */
+                //TODO: handle arguments correctly
                 return true
             case 31:
                 //GET_SAVE_DIRECTORY
