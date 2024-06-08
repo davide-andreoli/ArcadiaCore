@@ -22,6 +22,7 @@ public protocol ArcadiaCoreProtocol {
     var initialized: Bool {get set}
     var loadedGame: URL? {get set}
     var currentSaveRamSnapshot: [UInt32 : [UInt8]]? {get set}
+    var systemName: String {get}
     
     var audioVideoInfo: retro_system_av_info {get set}
     
@@ -75,21 +76,16 @@ public protocol ArcadiaCoreProtocol {
 // Libretro Callbacks
 extension ArcadiaCoreProtocol {
     
-    
     public var libretroEnvironmentCallback: @convention(c) (UInt32, UnsafeMutableRawPointer?) -> Bool {
         return {command, data in
-            if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-                print(arcadiaCommand)
-            } else {
-                print("Unknown \(command)")
-            }
             switch command {
             case 3:
+                //GET_CAN_DUPE
                 data?.storeBytes(of: true, as: Bool.self)
                 return true
             case 9:
-                //TODO: send the correct folder based on game type?
-                let url = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask)[0].appendingPathComponent("Arcadia")
+                // GET_SYSTEM_DIRECTORY
+                let url = ArcadiaCoreEmulationState.sharedInstance.currentGameType!.getCoreDirectory
                 
                 let path = url.path
                 
@@ -97,16 +93,16 @@ extension ArcadiaCoreProtocol {
                     fatalError("Failed to duplicate filepath")
                 }
                 
-                defer {
-                    free(systemDirCString)
-                }
-
-                data?.storeBytes(of: systemDirCString, as: UnsafeMutablePointer<CChar>.self)
+                // Store the pointer to the C string in data
+                data?.storeBytes(of: systemDirCString, as: UnsafePointer<CChar>.self)
+                
                 return true
             case 10:
+                // GET_PIXEL_FORMAT
                 ArcadiaCoreEmulationState.sharedInstance.mainBufferPixelFormat = ArcadiaCorePixelType(rawValue: data!.load(as: UInt32.self))
                 return true
             case 11:
+                //SET_INPUT_DESCRIPTORS
                 // Assuming data contains an array of retro_input_descriptors structs
                 // terminated by a { NULL, NULL } element
                 var variables: [retro_input_descriptor] = []
@@ -143,6 +139,7 @@ extension ArcadiaCoreProtocol {
                 }
                 return true
             case 15:
+                //GET_VARIABLE
                 // TODO: search for modified variables in the state and apply them
                 /*
                 // Define your custom key and value
@@ -172,6 +169,7 @@ extension ArcadiaCoreProtocol {
                 */
                 return false
             case 16:
+                //SET_VARIABLES
                 // Assuming data contains an array of retro_variable structs
                 // terminated by a { NULL, NULL } element
                 var variables: [retro_variable] = []
@@ -193,8 +191,57 @@ extension ArcadiaCoreProtocol {
                     
                 }
                 return true
+            case 27:
+                let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>) -> Void = {
+                        level, message in
+                        
+                        let levelString: String
+                        
+                        switch level {
+                        case RETRO_LOG_DEBUG:
+                            levelString = "DEBUG"
+                        case RETRO_LOG_INFO:
+                            levelString = "INFO"
+                        case RETRO_LOG_WARN:
+                            levelString = "WARN"
+                        case RETRO_LOG_ERROR:
+                            levelString = "ERROR"
+                        case RETRO_LOG_DUMMY:
+                            levelString = "DUMMY"
+                        default:
+                            levelString = "DEFAULT"
+                        }
+                        let messageString = String(cString: message)
+                        print("[\(levelString)] \(messageString)")
+                    }
+                let pointer = unsafeBitCast(libretroLogCallback, to: retro_log_printf_t.self)
+                let callback = retro_log_callback(log: pointer)
+                data?.storeBytes(of: callback, as: retro_log_callback.self)
+                return true
+            case 31:
+                //GET_SAVE_DIRECTORY
+                let url = ArcadiaCoreEmulationState.sharedInstance.currentGameType!.getSaveDirectory
                 
+                let path = url.path
+                
+                guard let systemDirCString = strdup(path) else {
+                    fatalError("Failed to duplicate filepath")
+                }
+                
+                // Store the pointer to the C string in data
+                data?.storeBytes(of: systemDirCString, as: UnsafePointer<CChar>.self)
+                
+                return true
+            case 52:
+                // GET_CORE_OPTIONS_VERSION
+                // Not going to implement core options as of right now
+                return false
             default:
+                if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
+                    print("Not managed: \(arcadiaCommand)")
+                } else {
+                    print("Unknown \(command)")
+                }
                 return false
             }
         }
@@ -332,6 +379,8 @@ extension ArcadiaCoreProtocol {
             
         }
     }
+    
+
     
 
     

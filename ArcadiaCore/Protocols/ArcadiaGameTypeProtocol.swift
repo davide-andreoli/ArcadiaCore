@@ -15,5 +15,10 @@ public protocol ArcadiaGameTypeProtocol {
     var saveFileExtension: String  {get}
     var supportedSaveFiles: [ArcadiaCoreMemoryType : String] {get}
     
+    var getSaveDirectory: URL {get}
+    var getStateDirectory: URL  {get}
+    var getImageDirectory: URL  {get}
+    var getCoreDirectory: URL  {get}
+    
 }
 
