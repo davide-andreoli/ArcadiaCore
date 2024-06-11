@@ -22,7 +22,7 @@ public protocol ArcadiaCoreProtocol {
     var initialized: Bool {get set}
     var loadedGame: URL? {get set}
     var currentSaveRamSnapshot: [UInt32 : [UInt8]]? {get set}
-    
+    var defaultCoreOptions: [ArcadiaCoreOption] {get set}
     var audioVideoInfo: retro_system_av_info {get set}
     
     // Libretro Callbacks
@@ -138,34 +138,29 @@ extension ArcadiaCoreProtocol {
                 }
                 return true
             case 15:
-                //GET_VARIABLE
-                // TODO: search for modified variables in the state and apply them
+                // TODO: this works but it sends always the same variable. Ideally, each core should have a list of predefined options to be applied, and once they're applied they should not be applied anymore
+                if ArcadiaCoreEmulationState.sharedInstance.coreOptionsToApply.isEmpty {
+                    return false
+                } else {
+                    let coreOption = ArcadiaCoreEmulationState.sharedInstance.coreOptionsToApply.removeFirst()
+                    let customVariable = coreOption.getRetroVariable()
+                    print("Trying to apply \(coreOption.key)")
+                    data?.storeBytes(of: customVariable, as: retro_variable.self)
+                    return true
+                }
                 /*
-                // Define your custom key and value
-                let customKey = "gearboy_palette"
-                let customValue = "B/W"
-                
-                // Convert Swift String to C-style string
-                let keyCString = strdup(customKey)
-                let valueCString = strdup(customValue)
-                
-                // Create retro_variable struct
-                var customVariable = retro_variable(key: keyCString, value: valueCString)
-                
-                // Allocate memory for retro_variable struct
-                let variableSize = MemoryLayout<retro_variable>.size
-                let variablePointer = UnsafeMutableRawPointer.allocate(byteCount: variableSize, alignment: 1)
-                
-                // Copy customVariable into memory
-                variablePointer.initializeMemory(as: retro_variable.self, from: &customVariable, count: 1)
-                
-                // Set the data parameter to point to the loaded retro_variable struct
-                data?.storeBytes(of: variablePointer, as: UnsafeMutableRawPointer?.self)
-                
-                // Free allocated C-style strings
-                free(keyCString)
-                free(valueCString)
-                */
+                if ArcadiaCoreEmulationState.sharedInstance.currentGameType?.name == "GameBoy Advance" {
+                    let customKey = "vbanext_rtc"
+                    let customValue = "enabled"
+                    let keyCString = strdup(customKey)
+                    let valueCString = strdup(customValue)
+                    let customVariable = retro_variable(key: keyCString, value: valueCString)
+                    data?.storeBytes(of: customVariable, as: retro_variable.self)
+                    free(keyCString)
+                    free(valueCString)
+                    return true
+                }
+                 */
                 return false
             case 16:
                 //SET_VARIABLES

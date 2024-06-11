@@ -34,6 +34,7 @@ import QuartzCore
     
     public var currentCore: (any ArcadiaCoreProtocol)? = nil
     public var currentGameType: (any ArcadiaGameTypeProtocol)? = nil
+    public var coreOptionsToApply: [ArcadiaCoreOption] = []
     
     public var pressedButtons: [UInt32 : [UInt32 : [UInt32 : [UInt32 : Int16]]]] = [:]
     public var currentAudioFrameFloat = [Float]()
@@ -153,7 +154,7 @@ import QuartzCore
         }
         self.currentStateURL = stateURL
         self.currentSaveFileURL = saveFileURLs
-        
+        self.coreOptionsToApply.append(contentsOf: self.currentCore!.defaultCoreOptions)
         self.currentCore?.loadGame(gameURL: gameURL)
         for memoryType in gameType.supportedSaveFiles.keys {
             if FileManager.default.fileExists(atPath: self.currentSaveFileURL[memoryType]?.path ?? "") {
