@@ -138,30 +138,14 @@ extension ArcadiaCoreProtocol {
                 }
                 return true
             case 15:
-                // TODO: this works but it sends always the same variable. Ideally, each core should have a list of predefined options to be applied, and once they're applied they should not be applied anymore
                 if ArcadiaCoreEmulationState.sharedInstance.coreOptionsToApply.isEmpty {
                     return false
                 } else {
                     let coreOption = ArcadiaCoreEmulationState.sharedInstance.coreOptionsToApply.removeFirst()
                     let customVariable = coreOption.getRetroVariable()
-                    print("Trying to apply \(coreOption.key)")
                     data?.storeBytes(of: customVariable, as: retro_variable.self)
                     return true
                 }
-                /*
-                if ArcadiaCoreEmulationState.sharedInstance.currentGameType?.name == "GameBoy Advance" {
-                    let customKey = "vbanext_rtc"
-                    let customValue = "enabled"
-                    let keyCString = strdup(customKey)
-                    let valueCString = strdup(customValue)
-                    let customVariable = retro_variable(key: keyCString, value: valueCString)
-                    data?.storeBytes(of: customVariable, as: retro_variable.self)
-                    free(keyCString)
-                    free(valueCString)
-                    return true
-                }
-                 */
-                return false
             case 16:
                 //SET_VARIABLES
                 // Assuming data contains an array of retro_variable structs
@@ -187,8 +171,11 @@ extension ArcadiaCoreProtocol {
                 return true
             case 17:
                 // GET_VARIABLE_UPDATE
-                // TODO: search if a variable has been modified and return true if so
-                return false
+                if ArcadiaCoreEmulationState.sharedInstance.coreOptionsToApply.isEmpty {
+                    return false
+                } else {
+                    return true
+                }
             case 27:
                 
                 let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>, UnsafeMutableRawPointer?) -> Void = {
@@ -226,13 +213,6 @@ extension ArcadiaCoreProtocol {
                 let pointer = unsafeBitCast(libretroLogCallback, to: retro_log_printf_t.self)
                 let callback = retro_log_callback(log: pointer)
                 data?.storeBytes(of: callback, as: retro_log_callback.self)
-                 
-                /*
-                let pointer = unsafeBitCast(libretro_log_callback, to: retro_log_printf_t.self)
-                let callback = retro_log_callback(log: pointer)
-                data?.storeBytes(of: callback, as: retro_log_callback.self)
-                 */
-                //TODO: handle arguments correctly
                 return true
             case 31:
                 //GET_SAVE_DIRECTORY
