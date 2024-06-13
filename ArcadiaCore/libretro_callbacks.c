@@ -99,5 +99,3 @@ void convert_s16_to_float(float *out, const int16_t *in, size_t samples, float g
         out[i] = ((float)in[i] * scale) * gain;
     }
 }
-
-

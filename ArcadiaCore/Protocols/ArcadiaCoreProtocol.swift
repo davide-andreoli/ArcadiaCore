@@ -177,7 +177,7 @@ extension ArcadiaCoreProtocol {
                     return true
                 }
             case 27:
-                
+                //TODO: Logging only when in production?
                 let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>, UnsafeMutableRawPointer?) -> Void = {
                     level, message, argPointer in
                 
@@ -197,16 +197,21 @@ extension ArcadiaCoreProtocol {
                         levelString = "DEFAULT"
                     }
                         
-                        let messageString = String(cString: message)
-                    var formattedString = ""
+                    let messageString = String(cString: message)
+                    var formattedString = messageString
+                    
+                    
                     //TODO: Handle multiple Args by counting the placeholders inside the message
+                    //TODO: Make this more solid on iOS, sometimes it does not work and sometimes it crashes for EXC_BAD_ACCESS
+                    #if os(macOS)
                     if let args = argPointer {
                         let argsPointer = args.bindMemory(to: CVarArg.self, capacity: 1)
                         withVaList([argsPointer]) { vaList in
                             formattedString = NSString(format: messageString, arguments: vaList) as String
                         }
                     }
-                        print("[\(levelString)] \(formattedString)")
+                    #endif
+                    print("[\(levelString)] \(messageString)")
                     
                 }
                 

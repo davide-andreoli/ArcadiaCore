@@ -16,5 +16,4 @@ int16_t libretro_input_state_callback(int16_t *array, int size, uint32_t id);
 
 void convert_s16_to_float(float *out, const int16_t *in, size_t samples, float gain);
 
-
 #endif /* workers_h */
