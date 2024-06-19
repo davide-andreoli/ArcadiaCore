@@ -73,39 +73,39 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
     public var mappingExplanation: String {
         switch self {
         case .joypadB:
-            return "B"
+            return "B button"
         case .joypadY:
-            return "y.circle.fill"
+            return "Y button"
         case .joypadSelect:
-            return "minus.circle.fill"
+            return "Select button"
         case .joypadStart:
             return "plus.circle.fill"
         case .joypadUp:
-            return "arrowtriangle.up.circle.fill"
+            return "The up arrow in the direction pad"
         case .joypadDown:
-            return "arrowtriangle.down.circle.fill"
+            return "The down arrow in the direction pad"
         case .joypadLeft:
-            return "arrowtriangle.left.circle.fill"
+            return "The left arrow in the direction pad"
         case .joypadRight:
-            return "arrowtriangle.right.circle.fill"
+            return "The right arrow in the direction pad"
         case .joypadA:
-            return "a.circle.fill"
+            return "A button"
         case .joypadX:
-            return "x.circle.fill"
+            return "X button"
         case .joypadL:
-            return "l.rectangle.roundedbottom.fill"
+            return "The top left shoulder button"
         case .joypadR:
-            return "r.rectangle.roundedbottom.fill"
+            return "The top right shoulder button"
         case .joypadL2:
-            return "l2.rectangle.roundedtop.fill"
+            return "The middle left shoulder button"
         case .joypadR2:
-            return "r2.rectangle.roundedtop.fill"
+            return "The middle right shoulder button"
         case .joypadL3:
-            return "zl.rectangle.roundedtop.fill"
+            return "The bottom left shoulder button"
         case .joypadR3:
-            return "zr.rectangle.roundedtop.fill"
+            return "The bottom right shoulder button"
         case .arcadiaButton:
-            return "line.3.horizontal.circle.fill"
+            return "Arcadia button: it lets you access useful in game functions such as saving states, changing player input, etc."
         }
     }
     

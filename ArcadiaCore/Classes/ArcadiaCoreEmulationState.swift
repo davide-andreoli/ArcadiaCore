@@ -41,7 +41,7 @@ import QuartzCore
     public var currentGameURL: URL? = nil
 
     public var currentSaveFileURL: [ArcadiaCoreMemoryType: URL] = [:]
-    public var currentStateURL: URL? = nil
+    public var currentStateURL: [Int : URL] = [:]
     
     public var currentCoreOptions: [ArcadiaCoreOption] = []
     
@@ -143,7 +143,7 @@ import QuartzCore
         self.checkSaveLoop = nil
     }
     
-    public func prepareCore(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURL: URL, saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
+    public func prepareCore(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURLs: [Int: URL], saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
         if gameType.name != currentGameType?.name {
             self.currentCore?.deinitializeCore()
             self.currentCore = nil
@@ -152,7 +152,7 @@ import QuartzCore
             self.currentCore?.initializeCore()
             self.currentCore?.setInputOutputCallbacks()
         }
-        self.currentStateURL = stateURL
+        self.currentStateURL = stateURLs
         self.currentSaveFileURL = saveFileURLs
         self.coreOptionsToApply.append(contentsOf: self.currentCore!.defaultCoreOptions)
         self.currentCore?.loadGame(gameURL: gameURL)
@@ -169,14 +169,14 @@ import QuartzCore
         
     }
     
-    public func startEmulation(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURL: URL, saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
+    public func startEmulation(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURLs: [Int : URL], saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
         if self.currentGameURL != nil {
             if self.currentGameURL == gameURL {
                 self.resumeEmulation()
             } else {
                 self.stopGameLoop()
                 self.currentCore?.unloadGame()
-                self.prepareCore(gameURL: gameURL, gameType: gameType, stateURL: stateURL, saveFileURLs: saveFileURLs)
+                self.prepareCore(gameURL: gameURL, gameType: gameType, stateURLs: stateURLs, saveFileURLs: saveFileURLs)
                 self.startGameLoop()
                 //TODO: check if current audio player sample rate is ok or it needs to change
                 if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
@@ -186,7 +186,7 @@ import QuartzCore
                 self.audioPlayer.start()
             }
         } else {
-            self.prepareCore(gameURL: gameURL, gameType: gameType, stateURL: stateURL, saveFileURLs: saveFileURLs)
+            self.prepareCore(gameURL: gameURL, gameType: gameType, stateURLs: stateURLs, saveFileURLs: saveFileURLs)
             self.startGameLoop()
             if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
                 print("Changing sample rate")
