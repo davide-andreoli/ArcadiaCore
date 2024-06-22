@@ -26,7 +26,7 @@ uint8_t* libretro_video_refresh_callback(const void *frame_buffer_data, uint32_t
         return NULL;
     }
 
-    int lengthOfFrameBuffer = height * pitch;
+    //int lengthOfFrameBuffer = height * pitch;
 
     uint8_t *pixelArray = (uint8_t *)malloc(width * height * 4); // 4 bytes per pixel for output buffer
     if (pixelArray == NULL) {
