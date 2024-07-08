@@ -20,8 +20,6 @@
 		955CC3A62BFC691100C930ED /* libretro_callbacks.c in Sources */ = {isa = PBXBuildFile; fileRef = 955CC3A42BFC691100C930ED /* libretro_callbacks.c */; };
 		955CC3B62BFC6FF200C930ED /* LibretroCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 955CC3AC2BFC6FF100C930ED /* LibretroCommon.framework */; };
 		955CC3BB2BFC6FF200C930ED /* LibretroCommonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 955CC3BA2BFC6FF200C930ED /* LibretroCommonTests.swift */; };
-		955CCADF2BFCD51800C930ED /* LibretroCommon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 955CC3AC2BFC6FF100C930ED /* LibretroCommon.framework */; };
-		955CCAE02BFCD51800C930ED /* LibretroCommon.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 955CC3AC2BFC6FF100C930ED /* LibretroCommon.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		955CCAE42BFCD53600C930ED /* LibretroCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 955CC3AE2BFC6FF100C930ED /* LibretroCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		955CCAE52BFCD53D00C930ED /* libretro.h in Headers */ = {isa = PBXBuildFile; fileRef = 955CC88B2BFC74CB00C930ED /* libretro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		956F84142BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84132BF3392C0025FC5F /* ArcadiaCoreEmulationState.swift */; };
@@ -34,6 +32,7 @@
 		956F84252BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */; };
 		959F3BA92C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */; };
 		959F3BAD2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */; };
+		95CC72132C3B1D59009FB8DD /* libretro.h in Headers */ = {isa = PBXBuildFile; fileRef = 95CC72122C3B1D1B009FB8DD /* libretro.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,28 +50,7 @@
 			remoteGlobalIDString = 955CC3AB2BFC6FF100C930ED;
 			remoteInfo = LibretroCommon;
 		};
-		955CCAE12BFCD51800C930ED /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 95456B862BE2AC0900113B8A /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 955CC3AB2BFC6FF100C930ED;
-			remoteInfo = LibretroCommon;
-		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		955CCAE32BFCD51800C930ED /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				955CCAE02BFCD51800C930ED /* LibretroCommon.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		95456B8F2BE2AC0900113B8A /* ArcadiaCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ArcadiaCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -494,6 +472,7 @@
 		956F84242BF3C01A0025FC5F /* ArcadiaAudioVideoInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaAudioVideoInfo.swift; sourceTree = "<group>"; };
 		959F3BA82C11134E009EF53B /* ArcadiaCoreAudioPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreAudioPlayer.swift; sourceTree = "<group>"; };
 		959F3BAC2C118A2D009EF53B /* ArcadiaCoreMetalRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArcadiaCoreMetalRenderer.swift; sourceTree = "<group>"; };
+		95CC72122C3B1D1B009FB8DD /* libretro.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = libretro.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -501,7 +480,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				955CCADF2BFCD51800C930ED /* LibretroCommon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -565,6 +543,7 @@
 				95456B932BE2AC0900113B8A /* ArcadiaCore.docc */,
 				955CC3A32BFC691100C930ED /* libretro_callbacks.h */,
 				955CC3A42BFC691100C930ED /* libretro_callbacks.c */,
+				95CC72122C3B1D1B009FB8DD /* libretro.h */,
 			);
 			path = ArcadiaCore;
 			sourceTree = "<group>";
@@ -1955,6 +1934,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				95CC72132C3B1D59009FB8DD /* libretro.h in Headers */,
 				955CC3A52BFC691100C930ED /* libretro_callbacks.h in Headers */,
 				95456BA02BE2AC0A00113B8A /* ArcadiaCore.h in Headers */,
 			);
@@ -1980,12 +1960,10 @@
 				95456B8B2BE2AC0900113B8A /* Sources */,
 				95456B8C2BE2AC0900113B8A /* Frameworks */,
 				95456B8D2BE2AC0900113B8A /* Resources */,
-				955CCAE32BFCD51800C930ED /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				955CCAE22BFCD51800C930ED /* PBXTargetDependency */,
 			);
 			name = ArcadiaCore;
 			productName = iRetroCore;
@@ -2183,11 +2161,6 @@
 			isa = PBXTargetDependency;
 			target = 955CC3AB2BFC6FF100C930ED /* LibretroCommon */;
 			targetProxy = 955CC3B72BFC6FF200C930ED /* PBXContainerItemProxy */;
-		};
-		955CCAE22BFCD51800C930ED /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 955CC3AB2BFC6FF100C930ED /* LibretroCommon */;
-			targetProxy = 955CCAE12BFCD51800C930ED /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

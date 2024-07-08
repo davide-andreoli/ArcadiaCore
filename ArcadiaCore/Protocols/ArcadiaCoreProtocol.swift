@@ -7,7 +7,6 @@
 
 import Foundation
 import CoreGraphics
-import LibretroCommon
 
 public protocol ArcadiaVariableProtocol {
     var key: UnsafePointer<CChar>! { get set }

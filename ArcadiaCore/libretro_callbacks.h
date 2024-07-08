@@ -9,7 +9,7 @@
 #define libretro_callbacks_h
 
 #include <stdio.h>
-#import <LibretroCommon/libretro.h>
+#include <ArcadiaCore/libretro.h>
 
 uint8_t* libretro_video_refresh_callback(const void *frame_buffer_data, uint32_t width, uint32_t height, int pitch, enum retro_pixel_format pixel_format);
 int16_t libretro_input_state_callback(int16_t *array, int size, uint32_t id);
