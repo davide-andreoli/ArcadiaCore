@@ -203,12 +203,16 @@ extension ArcadiaCoreProtocol {
                     //TODO: Handle multiple Args by counting the placeholders inside the message
                     //TODO: Make this more solid on iOS, sometimes it does not work and sometimes it crashes for EXC_BAD_ACCESS
                     #if os(macOS)
+                        #if arch(x86_64)
+                            #if DEBUG
                     if let args = argPointer {
                         let argsPointer = args.bindMemory(to: CVarArg.self, capacity: 1)
                         withVaList([argsPointer]) { vaList in
                             formattedString = NSString(format: messageString, arguments: vaList) as String
                         }
                     }
+                            #endif
+                        #endif
                     #endif
                     print("[\(levelString)] \(messageString)")
                     
