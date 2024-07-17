@@ -81,6 +81,15 @@ extension ArcadiaCoreProtocol {
                 //GET_CAN_DUPE
                 data?.storeBytes(of: true, as: Bool.self)
                 return true
+            case 8:
+                //SET_PERFORMANCE_LEVEL
+                if let data = data {
+                    // Set performance level to 2
+                    let performanceLevel: UInt32 = 2
+                    data.storeBytes(of: performanceLevel, as: UInt32.self)
+                    print("Performance level set to \(performanceLevel)")
+                }
+                return true
             case 9:
                 // GET_SYSTEM_DIRECTORY
                 let url = ArcadiaCoreEmulationState.sharedInstance.currentGameType!.getCoreDirectory
@@ -236,6 +245,9 @@ extension ArcadiaCoreProtocol {
                 data?.storeBytes(of: systemDirCString, as: UnsafePointer<CChar>.self)
                 
                 return true
+            case 35:
+                //SET_CONTROLLER_INFO
+                return false
             case 52:
                 // GET_CORE_OPTIONS_VERSION
                 // Not going to implement core options as of right now

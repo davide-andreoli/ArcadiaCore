@@ -250,10 +250,23 @@ import QuartzCore
     }
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
-        self.pressedButtons[port]?[device]?[index]?[UInt32(id.rawValue)] = 1
+        self.pressButton(port: port, device: device, index: index, button: id.rawValue)
     }
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
+        if self.pressedButtons[port] == nil {
+            self.pressedButtons[port] = [:]
+        }
+        if self.pressedButtons[port]?[device] == nil {
+            self.pressedButtons[port]?[device] = [:]
+        }
+        
+        if self.pressedButtons[port]?[device]?[0] == nil {
+            self.pressedButtons[port]?[device]?[0] = [:]
+        }
+        if self.pressedButtons[port]?[device]?[0]?[id] == nil {
+            self.pressedButtons[port]?[device]?[0]?[id] = Int16(1)
+        }
         self.pressedButtons[port]?[device]?[index]?[id] = 1
     }
     
