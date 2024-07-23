@@ -8,16 +8,47 @@
 import Foundation
 import CoreGraphics
 import QuartzCore
-
-
-
-
+import MetalKit
 
 @Observable public class ArcadiaCoreEmulationState {
     
     public static var sharedInstance = ArcadiaCoreEmulationState()
     public var audioPlayer = ArcadiaCoreAudioPlayer()
     public var metalRendered = ArcadiaCoreMetalRenderer()
+    public var lastImage: CGImage? {
+        // Ensure the metalRendered texture is valid
+        guard let texture = metalRendered.texture else {
+            print("Texture not available")
+            return nil
+        }
+                
+        // Create a CIImage from the Metal texture
+        guard let image = CIImage(mtlTexture: texture, options: nil) else {
+            print("Failed to create CIImage from Metal texture")
+            return nil
+        }
+        
+        // Flip the image vertically
+        let flipped = image.transformed(by: CGAffineTransform(scaleX: 1, y: -1))
+        
+        // Ensure the color space matches the texture's color space
+        guard let colorSpace = CGColorSpace(name: CGColorSpace.extendedSRGB) else {
+            print("Failed to create color space")
+            return nil
+        }
+        
+        // Create a CGImage from the CIImage
+        guard let cgImage = CIContext().createCGImage(flipped, from: flipped.extent, format: .RGBA8, colorSpace: colorSpace) else {
+            print("Failed to create CGImage from CIImage")
+            return nil
+        }
+        
+        // Log the success and the size of the CGImage
+        print("Returning image \(cgImage.width) x \(cgImage.height)")
+        return cgImage
+    }
+
+
     
     public var audioVideoInfo: retro_system_av_info? = nil
     public var mainBuffer = [UInt8]()
