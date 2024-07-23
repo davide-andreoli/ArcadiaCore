@@ -32,7 +32,7 @@ import MetalKit
         let flipped = image.transformed(by: CGAffineTransform(scaleX: 1, y: -1))
         
         // Ensure the color space matches the texture's color space
-        guard let colorSpace = CGColorSpace(name: CGColorSpace.extendedSRGB) else {
+        guard let colorSpace = CGColorSpace(name: CGColorSpace.sRGB) else {
             print("Failed to create color space")
             return nil
         }
