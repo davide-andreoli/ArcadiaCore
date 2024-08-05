@@ -185,7 +185,7 @@ extension ArcadiaCoreProtocol {
                     return true
                 }
             case 27:
-                //TODO: Logging only when in production?
+                #if DEBUG
                 let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>, UnsafeMutableRawPointer?) -> Void = {
                     level, message, argPointer in
                 
@@ -231,6 +231,9 @@ extension ArcadiaCoreProtocol {
                 let callback = retro_log_callback(log: pointer)
                 data?.storeBytes(of: callback, as: retro_log_callback.self)
                 return true
+                #else
+                return false
+                #endif
             case 31:
                 //GET_SAVE_DIRECTORY
                 let url = ArcadiaCoreEmulationState.sharedInstance.currentGameType!.getSaveDirectory
@@ -248,6 +251,16 @@ extension ArcadiaCoreProtocol {
             case 35:
                 //SET_CONTROLLER_INFO
                 return false
+            case 37:
+                //SET_GEOMETRY
+                let geometry = data!.load(as: retro_game_geometry.self)
+                if ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_width != geometry.base_width {
+                    ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_width = geometry.base_width
+                }
+                if ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_height != geometry.base_height {
+                    ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_height = geometry.base_height
+                }
+                return true
             case 52:
                 // GET_CORE_OPTIONS_VERSION
                 // Not going to implement core options as of right now
@@ -272,6 +285,13 @@ extension ArcadiaCoreProtocol {
             }
             let length = Int(width * height * 4)
             let bufferPointer = UnsafeBufferPointer(start: pointer, count: length)
+            ArcadiaCoreEmulationState.sharedInstance.mainBuffer = Array(bufferPointer)
+            if ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_width != width {
+                ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_width = width
+            }
+            if ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_height != height {
+                ArcadiaCoreEmulationState.sharedInstance.audioVideoInfo?.geometry.base_height = height
+            }
             ArcadiaCoreEmulationState.sharedInstance.mainBuffer = Array(bufferPointer)
             ArcadiaCoreEmulationState.sharedInstance.metalRendered.updateTexture(with: Array(bufferPointer), width: Int(width), height: Int(height))
             free(pointer)
