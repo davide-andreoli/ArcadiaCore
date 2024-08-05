@@ -30,6 +30,57 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
     case joypadL3 = 14
     case joypadR3 = 15
     case arcadiaButton = 16
+    case joypadUpRight = 17
+    case joypadUpLeft = 18
+    case joypadDownRight = 19
+    case joypadDownLeft = 20
+    
+    public var buttonsToPress: [UInt32] {
+        switch self {
+        case .joypadB:
+            return [0]
+        case .joypadY:
+            return [1]
+        case .joypadSelect:
+            return [2]
+        case .joypadStart:
+            return [3]
+        case .joypadUp:
+            return [4]
+        case .joypadDown:
+            return [5]
+        case .joypadLeft:
+            return [6]
+        case .joypadRight:
+            return [7]
+        case .joypadA:
+            return [8]
+        case .joypadX:
+            return [9]
+        case .joypadL:
+            return [10]
+        case .joypadR:
+            return [11]
+        case .joypadL2:
+            return [12]
+        case .joypadR2:
+            return [13]
+        case .joypadL3:
+            return [14]
+        case .joypadR3:
+            return [15]
+        case .arcadiaButton:
+            return [16]
+        case .joypadUpRight:
+            return [4, 7]
+        case .joypadUpLeft:
+            return [4, 6]
+        case .joypadDownRight:
+            return [5, 7]
+        case .joypadDownLeft:
+            return [5, 6]
+        }
+    }
     
     public var systemImageName: String {
         switch self {
@@ -67,6 +118,14 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
             return "zr.rectangle.roundedtop.fill"
         case .arcadiaButton:
             return "line.3.horizontal.circle.fill"
+        case .joypadUpRight:
+            return "arrow.up.right.circle.fill"
+        case .joypadUpLeft:
+            return "arrow.up.left.circle.fill"
+        case .joypadDownRight:
+            return "arrow.down.right.circle.fill"
+        case .joypadDownLeft:
+            return "arrow.down.left.circle.fill"
         }
     }
     
@@ -106,6 +165,14 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
             return "The bottom right shoulder button"
         case .arcadiaButton:
             return "Arcadia button: it lets you access useful in game functions such as saving states, changing player input, etc."
+        case .joypadUpRight:
+            return "Combo button that will press up and right simultaneously"
+        case .joypadUpLeft:
+            return "Combo button that will press up and left simultaneously"
+        case .joypadDownRight:
+            return "Combo button that will press down and right simultaneously"
+        case .joypadDownLeft:
+            return "Combo button that will press down and left simultaneously"
         }
     }
     
@@ -145,6 +212,15 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
             return "Right Shoulder Three"
         case .arcadiaButton:
             return "Arcadia Button"
+        case .joypadUpRight:
+            return "Arrow Up Right"
+        case .joypadUpLeft:
+            return "Arrow Up Left"
+        case .joypadDownRight:
+            return "Arrow Down Right"
+        case .joypadDownLeft:
+            return "Arrow Down Left"
         }
     }
+    
 }

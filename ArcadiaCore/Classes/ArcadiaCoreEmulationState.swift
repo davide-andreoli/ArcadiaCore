@@ -281,7 +281,10 @@ import MetalKit
     }
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
-        self.pressButton(port: port, device: device, index: index, button: id.rawValue)
+        for buttonId in id.buttonsToPress {
+            self.pressButton(port: port, device: device, index: index, button: buttonId)
+        }
+        
     }
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
@@ -306,7 +309,9 @@ import MetalKit
     }
     
     public func unpressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
-        self.pressedButtons[port]?[device]?[index]?[UInt32(id.rawValue)] = 0
+        for buttonId in id.buttonsToPress {
+            self.unpressButton(port: port, device: device, index: index, button: buttonId)
+        }
     }
     
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
