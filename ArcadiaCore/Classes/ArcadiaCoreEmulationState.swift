@@ -75,6 +75,7 @@ import MetalKit
     public var currentStateURL: [Int : URL] = [:]
     
     public var currentCoreOptions: [ArcadiaCoreOption] = []
+    public var gameLoadingError: Bool = false
     
     public var mainGameLoop : Timer? = nil
     public var checkSaveLoop: DispatchSourceTimer? = nil
@@ -175,6 +176,7 @@ import MetalKit
     }
     
     public func prepareCore(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURLs: [Int: URL], saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
+        self.gameLoadingError = false
         if gameType.name != currentGameType?.name {
             self.currentCore?.deinitializeCore()
             self.currentCore = nil
@@ -186,18 +188,26 @@ import MetalKit
         self.currentStateURL = stateURLs
         self.currentSaveFileURL = saveFileURLs
         self.coreOptionsToApply.append(contentsOf: self.currentCore!.defaultCoreOptions)
-        self.currentCore?.loadGame(gameURL: gameURL)
-        for memoryType in gameType.supportedSaveFiles.keys {
-            if FileManager.default.fileExists(atPath: self.currentSaveFileURL[memoryType]?.path ?? "") {
-                self.currentCore?.loadBatterySave(from: self.currentSaveFileURL[memoryType]!, memoryDataId: memoryType.rawValue)
-            }
-            else {
-                self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (self.currentSaveFileURL[memoryType])!)
-                self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: memoryType.rawValue)
-            }
-            
-        }
         
+        if let gameLoaded = self.currentCore?.loadGame(gameURL: gameURL) {
+            print("Loaded Game \(gameLoaded)")
+            if gameLoaded {
+                for memoryType in gameType.supportedSaveFiles.keys {
+                    if FileManager.default.fileExists(atPath: self.currentSaveFileURL[memoryType]?.path ?? "") {
+                        self.currentCore?.loadBatterySave(from: self.currentSaveFileURL[memoryType]!, memoryDataId: memoryType.rawValue)
+                    }
+                    else {
+                        self.currentCore?.saveMemoryData(memoryId: memoryType.rawValue, saveFileURL: (self.currentSaveFileURL[memoryType])!)
+                        self.currentCore?.takeInitialSaveRamSnapshot(memoryDataId: memoryType.rawValue)
+                    }
+                    
+                }
+            } else {
+                self.gameLoadingError = true
+                // Load game failed, abort
+            }
+        }
+
     }
     
     public func startEmulation(gameURL: URL, gameType: any ArcadiaGameTypeProtocol, stateURLs: [Int : URL], saveFileURLs: [ArcadiaCoreMemoryType : URL]) {
@@ -208,22 +218,25 @@ import MetalKit
                 self.stopGameLoop()
                 self.currentCore?.unloadGame()
                 self.prepareCore(gameURL: gameURL, gameType: gameType, stateURLs: stateURLs, saveFileURLs: saveFileURLs)
+                if  !self.gameLoadingError {
+                    self.startGameLoop()
+                    if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
+                        print("Changing sample rate")
+                        self.audioPlayer.changeSampleRate(to: self.currentCore!.audioVideoInfo.timing.sample_rate)
+                    }
+                    self.audioPlayer.start()
+                }
+            }
+        } else {
+            self.prepareCore(gameURL: gameURL, gameType: gameType, stateURLs: stateURLs, saveFileURLs: saveFileURLs)
+            if !self.gameLoadingError {
                 self.startGameLoop()
-                //TODO: check if current audio player sample rate is ok or it needs to change
                 if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
                     print("Changing sample rate")
                     self.audioPlayer.changeSampleRate(to: self.currentCore!.audioVideoInfo.timing.sample_rate)
                 }
                 self.audioPlayer.start()
             }
-        } else {
-            self.prepareCore(gameURL: gameURL, gameType: gameType, stateURLs: stateURLs, saveFileURLs: saveFileURLs)
-            self.startGameLoop()
-            if self.audioPlayer.sampleRate != self.currentCore?.audioVideoInfo.timing.sample_rate {
-                print("Changing sample rate")
-                self.audioPlayer.changeSampleRate(to: self.currentCore!.audioVideoInfo.timing.sample_rate)
-            }
-            self.audioPlayer.start()
         }
     }
     

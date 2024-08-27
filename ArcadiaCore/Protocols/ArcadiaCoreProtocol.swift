@@ -38,7 +38,7 @@ public protocol ArcadiaCoreProtocol {
     func retroDeinit()
     func retroRun()
     func retroReset()
-    func retroLoadGame(gameInfo: retro_game_info)
+    func retroLoadGame(gameInfo: retro_game_info) -> Bool
     func retroUnloadGame()
     func retroSerializeSize() -> Int
     func retroSerialize(data: UnsafeMutableRawPointer!, size: Int)
@@ -57,7 +57,7 @@ public protocol ArcadiaCoreProtocol {
     mutating func initializeCore()
     mutating func deinitializeCore()
     mutating func getSystemAVInfo()
-    mutating func loadGame(gameURL: URL)
+    mutating func loadGame(gameURL: URL) -> Bool
     mutating func unloadGame()
     func saveState(saveFileURL: URL)
     func loadState(saveFileURL: URL)
@@ -456,9 +456,7 @@ extension ArcadiaCoreProtocol {
         }
     }
     
-    mutating public func loadGame(gameURL: URL) {
-        self.loadedGame = gameURL
-        ArcadiaCoreEmulationState.sharedInstance.currentGameURL = gameURL
+    mutating public func loadGame(gameURL: URL) -> Bool {
         let filepath = gameURL.path
 
         guard let romNameCstr = strdup(filepath) else {
@@ -475,7 +473,17 @@ extension ArcadiaCoreProtocol {
         let data = romFile.withUnsafeBytes { $0.baseAddress }
 
         let rom_info = retro_game_info(path: romNameCptr, data: data, size: romFile.count, meta: nil)
-        retroLoadGame(gameInfo: rom_info)
+        let result = retroLoadGame(gameInfo: rom_info)
+        
+        if result {
+            self.loadedGame = gameURL
+            ArcadiaCoreEmulationState.sharedInstance.currentGameURL = gameURL
+        } else {
+            self.loadedGame = nil
+            ArcadiaCoreEmulationState.sharedInstance.currentGameURL = nil
+        }
+        
+        return result
     }
     
     mutating public func unloadGame() {
