@@ -17,6 +17,15 @@ public class ArcadiaCoreAudioPlayer {
     private let bufferUpdateQueue = DispatchQueue(label: "com.Arcadia.bufferUpdateQueue", qos: .userInteractive)
 
     init() {
+        
+        //TODO: Allow the user to change the Audio Session based on settings options
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.ambient, options: .mixWithOthers)
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to set audio session category: \(error)")
+        }
         audioEngine = AVAudioEngine()
         playerNode = AVAudioPlayerNode()
 
