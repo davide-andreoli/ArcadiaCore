@@ -19,6 +19,7 @@ public class ArcadiaCoreAudioPlayer {
     init() {
         
         //TODO: Allow the user to change the Audio Session based on settings options
+        #if os(iOS)
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(.ambient, options: .mixWithOthers)
@@ -26,6 +27,7 @@ public class ArcadiaCoreAudioPlayer {
         } catch {
             print("Failed to set audio session category: \(error)")
         }
+        #endif
         audioEngine = AVAudioEngine()
         playerNode = AVAudioPlayerNode()
 
