@@ -327,6 +327,15 @@ import MetalKit
         }
     }
     
+    public func checkForPress(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) -> Bool {
+        DispatchQueue.main.sync {
+            if pressedButtons[port]?[device]?[index]?[id] == 1 {
+                return true
+            }
+            return false
+        }
+    }
+    
     func createCGImage(pixels: [UInt8], width: Int, height: Int) -> CGImage? {
         
         if width == 0 {
