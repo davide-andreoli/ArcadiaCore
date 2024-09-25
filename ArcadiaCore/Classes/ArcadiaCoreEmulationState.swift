@@ -82,6 +82,8 @@ import MetalKit
     public var gameLoopTimer: DispatchSourceTimer? = nil
     public var paused = false
     
+    private let accessQueue = DispatchQueue(label: "com.arcadiaCoreEmulation.inputStateQueue")
+    
     public func attachCore(core: any ArcadiaCoreProtocol) {
         if self.currentCore == nil {
             self.currentCore = core
@@ -301,24 +303,18 @@ import MetalKit
     }
     
     public func pressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
-        if self.pressedButtons[port] == nil {
-            self.pressedButtons[port] = [:]
-        }
-        if self.pressedButtons[port]?[device] == nil {
-            self.pressedButtons[port]?[device] = [:]
-        }
         
-        if self.pressedButtons[port]?[device]?[0] == nil {
-            self.pressedButtons[port]?[device]?[0] = [:]
+        accessQueue.sync {
+            self.pressedButtons[port, default: [:]][device, default: [:]][index, default: [:]][id] = Int16(1)
         }
-        if self.pressedButtons[port]?[device]?[0]?[id] == nil {
-            self.pressedButtons[port]?[device]?[0]?[id] = Int16(1)
-        }
-        self.pressedButtons[port]?[device]?[index]?[id] = 1
     }
     
     public func unpressButton(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) {
-        self.pressedButtons[port]?[device]?[index]?[id] = 0
+        
+        accessQueue.sync {
+            self.pressedButtons[port]?[device]?[index]?[id] = 0
+        }
+        
     }
     
     public func unpressButton(port: UInt32, device: UInt32, index: UInt32, button id: ArcadiaCoreButton) {
@@ -328,7 +324,8 @@ import MetalKit
     }
     
     public func checkForPress(port: UInt32, device: UInt32, index: UInt32, button id: UInt32) -> Bool {
-        DispatchQueue.main.sync {
+                
+        return accessQueue.sync {
             if pressedButtons[port]?[device]?[index]?[id] == 1 {
                 return true
             }
