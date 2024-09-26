@@ -53,15 +53,17 @@ public class ArcadiaCoreAudioPlayer {
     }
     
     func changeSampleRate(to newSampleRate: Double) {
-        audioEngine.stop()
-        audioEngine.reset()
-        sampleRate = newSampleRate
-        self.audioFormat = AVAudioFormat(standardFormatWithSampleRate: newSampleRate, channels: self.audioFormat.channelCount)!
-        
-        self.audioEngine.detach(playerNode)
-        self.playerNode = AVAudioPlayerNode()
-        self.audioEngine.attach(playerNode)
-        self.audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: audioFormat)
+        bufferUpdateQueue.sync {
+            self.audioEngine.stop()
+            self.audioEngine.reset()
+            self.sampleRate = newSampleRate
+            self.audioFormat = AVAudioFormat(standardFormatWithSampleRate: newSampleRate, channels: self.audioFormat.channelCount)!
+            
+            self.audioEngine.detach(self.playerNode)
+            self.playerNode = AVAudioPlayerNode()
+            self.audioEngine.attach(self.playerNode)
+            self.audioEngine.connect(self.playerNode, to: self.audioEngine.mainMixerNode, format: self.audioFormat)
+        }
         
     }
 
