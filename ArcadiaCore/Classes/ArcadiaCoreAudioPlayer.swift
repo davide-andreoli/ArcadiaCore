@@ -13,16 +13,34 @@ public class ArcadiaCoreAudioPlayer {
     private var playerNode: AVAudioPlayerNode
     private var audioFormat: AVAudioFormat
     public var sampleRate: Double = 44100
+    private var isMuted: Bool = false
+    private var followsSilentSwitch: Bool = true
 
     private let bufferUpdateQueue = DispatchQueue(label: "com.Arcadia.bufferUpdateQueue", qos: .userInteractive)
 
     init() {
+        if let isMuted = UserDefaults.standard.object(forKey: "audioIsMuted") as? Bool {
+            self.isMuted = isMuted
+        } else {
+            self.isMuted = false
+        }
         
+        if let followsSilentSwitch = UserDefaults.standard.object(forKey: "audioFollowsSilentSwitch") as? Bool {
+            self.followsSilentSwitch = followsSilentSwitch
+        } else {
+            self.followsSilentSwitch = true
+        }
+
         //TODO: Allow the user to change the Audio Session based on settings options
         #if os(iOS)
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(.ambient, options: .mixWithOthers)
+            // Set the category based on whether the audio should follow the silent switch or not
+            if followsSilentSwitch {
+                try audioSession.setCategory(.ambient, options: .mixWithOthers)
+            } else {
+                try audioSession.setCategory(.playback, options: .mixWithOthers)
+            }
             try audioSession.setActive(true)
         } catch {
             print("Failed to set audio session category: \(error)")
@@ -41,6 +59,8 @@ public class ArcadiaCoreAudioPlayer {
 
         audioEngine.attach(playerNode)
         audioEngine.connect(playerNode, to: audioEngine.mainMixerNode, format: audioFormat)
+        
+        applyMute()
     }
 
     func start() {
@@ -96,6 +116,36 @@ public class ArcadiaCoreAudioPlayer {
             
             //self.playerNode.scheduleBuffer(buffer, at: nil, options: .interrupts, completionHandler: nil) // Works but audio is choppy
         }
+    }
+    
+    public func setMuted(_ muted: Bool) {
+        self.isMuted = muted
+        applyMute()
+    }
+
+    private func applyMute() {
+        if isMuted {
+            audioEngine.mainMixerNode.outputVolume = 0.0
+        } else {
+            audioEngine.mainMixerNode.outputVolume = 1.0
+        }
+    }
+    
+    public func setFollowsSilentSwitch(_ followSilentSwitch: Bool) {
+        self.followsSilentSwitch = followSilentSwitch
+        #if os(iOS)
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            if followsSilentSwitch {
+                try audioSession.setCategory(.ambient, options: .mixWithOthers)
+            } else {
+                try audioSession.setCategory(.playback, options: .mixWithOthers)
+            }
+            try audioSession.setActive(true)
+        } catch {
+            print("Failed to update audio session category: \(error)")
+        }
+        #endif
     }
 
 }

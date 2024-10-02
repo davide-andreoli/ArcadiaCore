@@ -96,8 +96,6 @@ import MetalKit
         }
     }
     
-
-            
     public func startGameLoop() {
         let gameLoopQueue = DispatchQueue(label: "com.Arcadia.gameLoop")
         if gameLoopTimer == nil {
