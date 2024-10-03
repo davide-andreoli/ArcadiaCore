@@ -136,6 +136,7 @@ public class ArcadiaCoreAudioPlayer {
         #if os(iOS)
         let audioSession = AVAudioSession.sharedInstance()
         do {
+            
             if followsSilentSwitch {
                 try audioSession.setCategory(.ambient, options: .mixWithOthers)
             } else {
