@@ -66,6 +66,7 @@ import MetalKit
     public var currentCore: (any ArcadiaCoreProtocol)? = nil
     public var currentGameType: (any ArcadiaGameTypeProtocol)? = nil
     public var coreOptionsToApply: [ArcadiaCoreOption] = []
+    public var appliedCoreOptions: [ArcadiaCoreOption] = []
     
     public var pressedButtons: [UInt32 : [UInt32 : [UInt32 : [UInt32 : Int16]]]] = [:]
     public var currentAudioFrameFloat = [Float]()
@@ -122,6 +123,17 @@ import MetalKit
     @objc func gameLoop() {
         if !paused {
             self.currentCore?.retroRun()
+            if !self.appliedCoreOptions.isEmpty {
+                for option in self.appliedCoreOptions {
+                    if let key = option.retroVariable?.key {
+                        free(UnsafeMutableRawPointer(mutating: key))
+                    }
+                    if let value = option.retroVariable?.value {
+                        free(UnsafeMutableRawPointer(mutating: value))
+                    }
+                }
+                self.appliedCoreOptions.removeAll()
+            }
         }
     }
     /*

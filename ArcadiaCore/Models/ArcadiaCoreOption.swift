@@ -7,17 +7,32 @@
 
 import Foundation
 
+extension retro_variable: Equatable, Hashable {
+    public static func == (lhs: retro_variable, rhs: retro_variable) -> Bool {
+        return lhs.key == rhs.key && lhs.value == rhs.value
+    }
+    
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(key)
+        hasher.combine(value)
+    }
+}
+
 public struct ArcadiaCoreOption: Hashable {
+    
+    
     public let key: String
     public let description: String?
     public let values: [String]?
     public let selectedValue: String?
+    public let retroVariable: retro_variable?
     
     init(key: String, description: String, values: [String]) {
         self.key = key
         self.description = description
         self.values = values
         self.selectedValue = nil
+        self.retroVariable = nil
     }
     
     public init(key: String, selectedValue: String) {
@@ -25,16 +40,10 @@ public struct ArcadiaCoreOption: Hashable {
         self.selectedValue = selectedValue
         self.values = nil
         self.description = nil
+        self.retroVariable = retro_variable(key: strdup(key), value: strdup(selectedValue))
     }
     
     public func getRetroVariable() -> retro_variable {
-        let customKey = self.key
-        let customValue = self.selectedValue
-        let keyCString = strdup(customKey)
-        let valueCString = strdup(customValue)
-        let customVariable = retro_variable(key: keyCString, value: valueCString)
-        free(keyCString)
-        free(valueCString)
-        return customVariable
+        return self.retroVariable!
     }
 }

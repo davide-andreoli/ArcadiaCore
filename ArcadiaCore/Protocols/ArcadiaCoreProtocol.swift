@@ -13,6 +13,16 @@ public protocol ArcadiaVariableProtocol {
     var value: UnsafePointer<CChar>! { get set }
 }
 
+public extension Notification.Name {
+    static let arcadiaVibrationNotification = Notification.Name("arcadiaVibrationNotification")
+}
+
+public struct ArcadiaVibrationNotification {
+    public let port: UInt32
+    public let effect: retro_rumble_effect
+    public let strength: UInt16
+}
+
 public protocol ArcadiaCoreProtocol {
     
     associatedtype ArcadiaCoreType: ArcadiaCoreProtocol
@@ -150,8 +160,8 @@ extension ArcadiaCoreProtocol {
                     return false
                 } else {
                     let coreOption = ArcadiaCoreEmulationState.sharedInstance.coreOptionsToApply.removeFirst()
-                    let customVariable = coreOption.getRetroVariable()
-                    data?.storeBytes(of: customVariable, as: retro_variable.self)
+                    data?.storeBytes(of: coreOption.getRetroVariable(), as: retro_variable.self)
+                    ArcadiaCoreEmulationState.sharedInstance.appliedCoreOptions.append(coreOption)
                     return true
                 }
             case 16:
@@ -184,6 +194,18 @@ extension ArcadiaCoreProtocol {
                 } else {
                     return true
                 }
+            case 23:
+                // GET_RUMBLE_INTERFACE
+                let rumbleCallback: @convention(c) (UInt32, retro_rumble_effect, UInt16) -> Bool =
+                     { port, effect, strength in
+                         print("Sending notification")
+                         NotificationCenter.default.post(name: .arcadiaVibrationNotification, object: ArcadiaVibrationNotification(port: port, effect: effect, strength: strength))
+                        return true
+                    }
+                
+                let rumbleInterface = retro_rumble_interface(set_rumble_state: rumbleCallback)
+                data?.storeBytes(of: rumbleInterface, as: retro_rumble_interface.self)
+                return true
             case 27:
                 #if DEBUG
                 let libretroLogCallback: @convention(c) (retro_log_level, UnsafePointer<Int8>, UnsafeMutableRawPointer?) -> Void = {
@@ -246,7 +268,6 @@ extension ArcadiaCoreProtocol {
                 
                 // Store the pointer to the C string in data
                 data?.storeBytes(of: systemDirCString, as: UnsafePointer<CChar>.self)
-                
                 return true
             case 35:
                 //SET_CONTROLLER_INFO
@@ -267,7 +288,7 @@ extension ArcadiaCoreProtocol {
                 return false
             default:
                 if let arcadiaCommand = ArcadiaCallbackType(rawValue: command) {
-                    print("Not managed: \(arcadiaCommand)")
+                    print("Not managed: \(command) - \(arcadiaCommand)")
                 } else {
                     print("Unknown \(command)")
                 }
