@@ -125,6 +125,7 @@ import MetalKit
             self.currentCore?.retroRun()
             if !self.appliedCoreOptions.isEmpty {
                 for option in self.appliedCoreOptions {
+                    print("\(option.key)")
                     if let key = option.retroVariable?.key {
                         free(UnsafeMutableRawPointer(mutating: key))
                     }
@@ -196,10 +197,10 @@ import MetalKit
             self.attachCore(core: gameType.associatedCore)
             self.currentCore?.initializeCore()
             self.currentCore?.setInputOutputCallbacks()
+            self.coreOptionsToApply.append(contentsOf: self.currentCore!.defaultCoreOptions)
         }
         self.currentStateURL = stateURLs
         self.currentSaveFileURL = saveFileURLs
-        self.coreOptionsToApply.append(contentsOf: self.currentCore!.defaultCoreOptions)
         
         if let gameLoaded = self.currentCore?.loadGame(gameURL: gameURL) {
             print("Loaded Game \(gameLoaded)")
