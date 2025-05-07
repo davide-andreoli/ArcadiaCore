@@ -164,7 +164,7 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
         case .joypadR3:
             return "The bottom right shoulder button"
         case .arcadiaButton:
-            return "Altea button: it lets you access useful in game functions such as saving states, changing player input, etc."
+            return "Arcadia button: it lets you access useful in game functions such as saving states, changing player input, etc."
         case .joypadUpRight:
             return "Combo button that will press up and right simultaneously"
         case .joypadUpLeft:
@@ -211,7 +211,7 @@ public enum ArcadiaCoreButton: UInt32, CaseIterable, Identifiable {
         case .joypadR3:
             return "Right Shoulder Three"
         case .arcadiaButton:
-            return "Altea Button"
+            return "Arcadia Button"
         case .joypadUpRight:
             return "Arrow Up Right"
         case .joypadUpLeft:
